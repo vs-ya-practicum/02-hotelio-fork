@@ -1,0 +1,85 @@
+@startuml Hotelio Target System Container
+!NEW_C4_STYLE=1
+
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+SHOW_PERSON_OUTLINE()
+
+title Hotelio Target System Container
+
+Person(user, "Пользователь", "Ищет и бронирует отели")
+Person(partner, "Партнёрский канал", "Использует публичные API Hotelio")
+Person(operationsTeam, "Команда эксплуатации", "Использует дашборды и получает алерты")
+
+System_Boundary(hotelio, "Целевая система Hotelio") {
+    Container_Boundary(kubernetes, "Управляемый Kubernetes") {
+        Container(ingress, "Управляемый Kubernetes", "Ingress", "Принимает публичный HTTPS-трафик")
+        Container(apiGateway, "API Gateway", "Gateway", "Маршрутизирует API партнёров и API миграции")
+        Container(istio, "Istio", "Service Mesh", "Управляет межсервисным трафиком")
+        Container(grafanaAlloy, "Grafana Alloy", "Сборщик телеметрии", "Собирает телеметрию и экспортирует её в Grafana Cloud")
+
+        Container_Boundary(hotelioPlatform, "Платформа Hotelio") {
+            Container(graphqlBff, "GraphQL BFF", "GraphQL", "Предоставляет целевой API фронтенда")
+            Container_Boundary(hotelBoundary, "HotelService") {
+                Container(hotel, "HotelService", "Spring Boot", "Предоставляет информацию об отелях и выполняет их проверку")
+                ContainerDb(hotelDb, "База данных отелей", "PostgreSQL", "HotelService самостоятельно хранит и изменяет данные отелей")
+            }
+            Container_Boundary(userBoundary, "UserService") {
+                Container(userService, "UserService", "Spring Boot", "Проверяет статус пользователя и наличие в чёрном списке")
+                ContainerDb(userDb, "База данных пользователей", "PostgreSQL", "UserService самостоятельно хранит и изменяет данные пользователей")
+            }
+            Container_Boundary(promoBoundary, "PromoCodeService") {
+                Container(promo, "PromoCodeService", "Spring Boot", "Проверяет применимость промокода")
+                ContainerDb(promoDb, "База данных промокодов", "PostgreSQL", "PromoCodeService самостоятельно хранит и изменяет данные промокодов")
+            }
+            Container_Boundary(reviewBoundary, "ReviewService") {
+                Container(review, "ReviewService", "Spring Boot", "Предоставляет отзывы и проверяет рейтинг отеля")
+                ContainerDb(reviewDb, "База данных отзывов", "PostgreSQL", "ReviewService самостоятельно хранит и изменяет данные отзывов")
+            }
+            Container_Boundary(bookingBoundary, "BookingService") {
+                Container(booking, "BookingService", "Spring Boot", "Оркестрирует создание бронирования")
+                ContainerDb(bookingDb, "База данных бронирований", "PostgreSQL", "BookingService самостоятельно хранит и изменяет данные бронирований")
+            }
+            Container_Boundary(bookingReadModelBoundary, "Booking Read Model Service") {
+                Container(bookingReadModelService, "Application Read Model Service", "Spring Boot", "Потребляет события бронирований и предоставляет запросы к модели чтения")
+                ContainerDb(bookingReadModelDb, "Read Model DB", "PostgreSQL", "Сервис самостоятельно хранит и изменяет данные модели чтения")
+            }
+        }
+
+        SystemQueue(kafka, "Kafka", "Масштабируемая интеграция сервисов")
+    }
+}
+
+System_Ext(grafanaCloud, "Grafana Cloud", "Предоставляет управляемые метрики, логи, трассировку, дашборды и алерты")
+
+Rel(user, ingress, "Использует GraphQL-запросы и существующие REST API", "HTTPS")
+Rel(partner, ingress, "Использует существующие REST API", "HTTPS")
+Rel(ingress, graphqlBff, "Маршрутизирует GraphQL-запросы фронтенда", "HTTPS")
+Rel(ingress, apiGateway, "Маршрутизирует существующие REST API", "HTTPS")
+
+Rel(graphqlBff, bookingReadModelService, "Запрашивает историю бронирований с данными отелей; возможна задержка обновления", "HTTP через Istio")
+Rel(apiGateway, hotel, "Маршрутизирует существующие REST-запросы к отелям", "HTTP через Istio")
+Rel(apiGateway, booking, "Маршрутизирует существующие REST-запросы к бронированиям", "HTTP через Istio")
+
+Rel(booking, hotel, "Проверяет статус отеля и доступность", "HTTP через Istio")
+Rel(booking, userService, "Проверяет пользователя", "HTTP через Istio")
+Rel(booking, promo, "Проверяет промокод", "HTTP через Istio")
+Rel(booking, review, "Проверяет статус доверенного отеля", "HTTP через Istio")
+
+Rel(hotel, hotelDb, "Чтение/запись")
+Rel(userService, userDb, "Чтение")
+Rel(promo, promoDb, "Чтение")
+Rel(review, reviewDb, "Чтение/запись")
+Rel(booking, bookingDb, "Чтение/запись")
+
+Rel(booking, kafka, "Публикует BookingCreatedEvent", "Kafka")
+Rel(hotel, kafka, "Публикует события об изменениях отелей", "Kafka")
+Rel(bookingReadModelService, kafka, "Потребляет события бронирований и отелей", "Kafka")
+Rel(bookingReadModelService, bookingReadModelDb, "Чтение/запись")
+Rel(istio, hotelioPlatform, "Управляет трафиком")
+Rel(apiGateway, grafanaAlloy, "Экспортирует метрики запросов и логи доступа")
+Rel(hotelioPlatform, grafanaAlloy, "Экспортирует телеметрию сервисов")
+Rel(grafanaAlloy, grafanaCloud, "Экспортирует телеметрию")
+Rel(operationsTeam, grafanaCloud, "Использует дашборды и получает алерты")
+
+@enduml

@@ -1,0 +1,63 @@
+@startuml Вынос HotelService в Задаче 1 Container
+!NEW_C4_STYLE=1
+
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+SHOW_PERSON_OUTLINE()
+
+AddRelTag("blueRoute", $textColor="white", $lineColor="#0B3D91")
+AddRelTag("greenRoute", $textColor="black", $lineColor="#008000")
+AddRelTag("canaryRoute", $textColor="black", $lineColor="#B8860B", $lineStyle=DashedLine())
+
+title Вынос HotelService в Задаче 1 Container
+
+note "См. DRAFT-001-target-system.adr.md\nдля плана выноса." as adrNote
+note "Blue/green:\napi.hotelio использует blue, пока\ngreen.monolith доступен только тестировщикам.\n\nCanary:\napi.hotelio постепенно распределяет\nтрафик между blue и green." as rolloutNote
+
+Person(user, "Пользователь", "Использует публичные API Hotelio")
+Person(partner, "Партнёрский канал", "Использует публичные API Hotelio")
+Person(tester, "Тестировщик компании", "Использует маршрут green.monolith")
+Person(operationsTeam, "Команда эксплуатации", "Использует дашборды и получает алерты")
+
+System_Boundary(hotelio, "Hotelio во время выноса HotelService") {
+    Container_Boundary(legacy, "Устаревшая production-среда (blue)") {
+        Container(blueMonolith, "blue.monolith", "Spring Boot", "Основной production-бэкенд до переключения на Kubernetes")
+    }
+    ContainerDb(monolithDb, "База данных монолита", "PostgreSQL", "Изначально источник истины для данных отелей")
+
+    Container_Boundary(kubernetes, "Управляемый Kubernetes (green)") {
+        Container(ingress, "Ingress управляемого Kubernetes", "Ingress", "Принимает публичный HTTPS-трафик")
+        Container(apiGateway, "API Gateway", "Gateway", "Маршрутизирует трафик во время миграции")
+        Container(greenMonolith, "green.monolith", "Spring Boot", "Бэкенд монолита в Kubernetes")
+        Container(grafanaAlloy, "Grafana Alloy", "Сборщик телеметрии", "Собирает телеметрию и экспортирует её в Grafana Cloud")
+
+        Container_Boundary(hotelBoundary, "HotelService") {
+            Container(hotel, "HotelService", "Spring Boot", "Предоставляет API отелей и проверяет отели для BookingService")
+            ContainerDb(hotelDb, "База данных отелей", "PostgreSQL", "Изначально скопирована; становится источником истины после переключения")
+        }
+    }
+}
+
+System_Ext(grafanaCloud, "Grafana Cloud", "Предоставляет управляемые метрики, логи, дашборды и алерты")
+
+Rel(user, ingress, "Использует api.hotelio", "HTTPS")
+Rel(partner, ingress, "Использует api.hotelio", "HTTPS")
+Rel(tester, ingress, "Использует green.monolith", "HTTPS")
+Rel(ingress, apiGateway, "Маршрутизирует", "HTTPS")
+
+Rel(apiGateway, blueMonolith, "<back:#0B3D91>Исходный основной маршрут и маршрут отката", "HTTPS", $tags="blueRoute")
+Rel(apiGateway, greenMonolith, "<back:lightgreen>Маршрут только для тестировщиков", "HTTPS", $tags="greenRoute")
+Rel(apiGateway, greenMonolith, "<back:#FFD700>Canary production-трафика", "HTTPS", $tags="canaryRoute")
+Rel(apiGateway, hotel, "Маршрутизирует /api/hotels после переключения", "HTTPS")
+
+Rel(blueMonolith, monolithDb, "Использует", "SQL")
+Rel(greenMonolith, monolithDb, "Использует", "SQL")
+Rel(monolithDb, hotelDb, "Копирует данные отелей перед переключением", "SQL")
+Rel(hotel, hotelDb, "Чтение", "SQL")
+Rel(greenMonolith, hotel, "Проверяет отель при бронировании после переключения", "Внутренний HTTP/REST")
+Rel(apiGateway, grafanaAlloy, "Экспортирует метрики запросов и логи доступа")
+Rel(hotel, grafanaAlloy, "Записывает структурированные логи")
+Rel(grafanaAlloy, grafanaCloud, "Экспортирует телеметрию")
+Rel(operationsTeam, grafanaCloud, "Использует дашборды и получает алерты")
+
+@enduml

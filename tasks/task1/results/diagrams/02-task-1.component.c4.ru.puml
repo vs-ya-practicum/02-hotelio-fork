@@ -1,0 +1,35 @@
+@startuml Вынос HotelService в Задаче 1 Component
+!NEW_C4_STYLE=1
+
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+SHOW_PERSON_OUTLINE()
+
+title Вынос HotelService в Задаче 1 Component
+
+System_Boundary(hotelio, "Hotelio во время выноса HotelService") {
+    Container_Ext(apiGateway, "API Gateway", "Gateway", "Маршрутизирует /api/hotels во время миграции")
+    Container_Ext(greenMonolith, "green.monolith", "Spring Boot", "Вызывает HotelService для проверки бронирования")
+    Container_Ext(grafanaAlloy, "Grafana Alloy", "Сборщик телеметрии", "Собирает логи HotelService")
+
+    Container_Boundary(hotelService, "HotelService") {
+        Component(hotelApi, "REST API отелей", "Spring Boot REST", "Предоставляет публичное API отелей и проверку отелей для BookingService")
+        Component(hotelApplication, "HotelService", "Spring Boot", "Получает данные отелей и выполняет их проверку")
+        Component(hotelDataAccess, "HotelRepository", "Доступ к PostgreSQL", "Считывает записи отелей")
+        Component(healthEndpoint, "Конечная точка Actuator для проверки состояния", "Spring Boot Actuator", "Предоставляет готовность и работоспособность для проб Kubernetes")
+    }
+
+    ContainerDb_Ext(hotelDb, "База данных отелей", "PostgreSQL", "После переключения HotelService самостоятельно управляет данными отелей")
+}
+
+System_Ext(grafanaCloud, "Grafana Cloud", "Предоставляет управляемые логи, дашборды и алерты")
+
+Rel(apiGateway, hotelApi, "Маршрутизирует /api/hotels", "HTTPS")
+Rel(greenMonolith, hotelApi, "Проверяет отель", "Внутренний HTTP/REST")
+Rel(hotelApi, hotelApplication, "Использует")
+Rel(hotelApplication, hotelDataAccess, "Считывает данные отелей")
+Rel(hotelDataAccess, hotelDb, "Чтение", "SQL")
+Rel(hotelApplication, grafanaAlloy, "Записывает структурированные логи")
+Rel(grafanaAlloy, grafanaCloud, "Экспортирует логи")
+
+@enduml
