@@ -4,7 +4,7 @@ title Вынос HotelService в Задаче 1 Class
 
 skinparam packageStyle rectangle
 
-note "См. DRAFT-001-target-system.adr.md\nдля плана выноса." as adrNote
+note "См. ADR-001-task-1.ru.md\nдля плана выноса." as adrNote
 note "Blue/green:\napi.hotelio использует blue, пока\ngreen.monolith доступен только тестировщикам.\n\nCanary:\napi.hotelio постепенно распределяет\nтрафик между blue и green." as rolloutNote
 
 package "Устаревший production\nмонолит (blue)" {
@@ -40,9 +40,9 @@ package "Управляемый Kubernetes (green)" {
 class GrafanaCloud <<External system>>
 
 ingress --> apiGateway : маршрутизирует трафик
-apiGateway --> blueMonolith : исходный маршрут и откат
+apiGateway --> blueMonolith : основной маршрут до переключения на Kubernetes; затем только rollback
 note on link #0B3D91
-    <color:white>Blue: обычный трафик api.hotelio%n()<color:white>и цель отката.</color>
+    <color:white>Blue: api.hotelio использует blue, пока%n()<color:white>green доступен только тестировщикам.%n()<color:white>После переключения на green blue остаётся%n()<color:white>только rollback для этого переключения.</color>
 end note
 apiGateway --> BookingService : маршрут тестировщиков green.monolith
 note on link #lightgreen

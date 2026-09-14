@@ -5,14 +5,16 @@
 
 SHOW_PERSON_OUTLINE()
 
+skinparam noteTextAlignment left
+
 AddRelTag("blueRoute", $textColor="white", $lineColor="#0B3D91")
 AddRelTag("greenRoute", $textColor="black", $lineColor="#008000")
 AddRelTag("canaryRoute", $textColor="black", $lineColor="#B8860B", $lineStyle=DashedLine())
 
 title Вынос HotelService в Задаче 1 Container
 
-note "См. DRAFT-001-target-system.adr.md\nдля плана выноса." as adrNote
-note "Blue/green:\napi.hotelio использует blue, пока\ngreen.monolith доступен только тестировщикам.\n\nCanary:\napi.hotelio постепенно распределяет\nтрафик между blue и green." as rolloutNote
+note "См. ADR-001-task-1.ru.md\nдля плана выноса." as adrNote
+note "Blue/green:\napi.hotelio использует blue, пока green.monolith доступен только тестировщикам.\nПосле переключения на green blue остаётся\nтолько rollback для этого переключения.\n\nCanary:\napi.hotelio постепенно распределяет\nтрафик между blue и green." as rolloutNote
 
 Person(user, "Пользователь", "Использует публичные API Hotelio")
 Person(partner, "Партнёрский канал", "Использует публичные API Hotelio")
@@ -45,7 +47,7 @@ Rel(partner, ingress, "Использует api.hotelio", "HTTPS")
 Rel(tester, ingress, "Использует green.monolith", "HTTPS")
 Rel(ingress, apiGateway, "Маршрутизирует", "HTTPS")
 
-Rel(apiGateway, blueMonolith, "<back:#0B3D91>Исходный основной маршрут и маршрут отката", "HTTPS", $tags="blueRoute")
+Rel(apiGateway, blueMonolith, "<back:#0B3D91>Основной маршрут до переключения на Kubernetes; затем только rollback", "HTTPS", $tags="blueRoute")
 Rel(apiGateway, greenMonolith, "<back:lightgreen>Маршрут только для тестировщиков", "HTTPS", $tags="greenRoute")
 Rel(apiGateway, greenMonolith, "<back:#FFD700>Canary production-трафика", "HTTPS", $tags="canaryRoute")
 Rel(apiGateway, hotel, "Маршрутизирует /api/hotels после переключения", "HTTPS")
