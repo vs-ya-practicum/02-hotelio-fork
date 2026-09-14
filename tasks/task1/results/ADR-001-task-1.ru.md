@@ -33,20 +33,20 @@
 - GraphQL для фронтенда.
 
 <details>
-<summary>Диаграмма системного контекста: переход Hotelio к целевому состоянию</summary>
+<summary>Диаграмма: системный контекст перехода Hotelio к целевому состоянию</summary>
 
-![Hotelio Target Transition Context](diagrams/.svg/90-01-target.context.c4.svg)
+![Hotelio Target Transition Context](diagrams/.svg/90-01-target.context.c4.ru.svg)
 
-[Исходный код](diagrams/90-01-target.context.c4.puml)
+[Исходный код](diagrams/90-01-target.context.c4.ru.puml)
 
 </details>
 
 <details>
-<summary>Контейнер-диаграмма: целевая система Hotelio</summary>
+<summary>Диаграмма: контейнеры целевой системы Hotelio</summary>
 
-![Hotelio Target System Container](diagrams/.svg/90-02-target.container.c4.svg)
+![Hotelio Target System Container](diagrams/.svg/90-02-target.container.c4.ru.svg)
 
-[Исходный код](diagrams/90-02-target.container.c4.puml)
+[Исходный код](diagrams/90-02-target.container.c4.ru.puml)
 
 </details>
 
@@ -122,18 +122,17 @@
 
 #### План выноса сервиса
 
-> [!NOTE]
-> Этот план соответствует шаблону Strangler Fig.
+> [!INFO] Этот план соответствует шаблону Strangler Fig.
 
 Это явная последовательность сосуществования и переключения:
 
 1. Подготовить Kubernetes, CI/CD, API Gateway и средства мониторинга, логирования и трассировки. Затем кратко заморозить релизы монолита, чтобы развернуть ту же версию монолита как `green.monolith`.
 
-2. Оставить основной production-трафик на `blue.monolith`; валидировать `green.monolith` тестировщиками, затем направить небольшую отслеживаемую долю production-трафика на green. Переключить production-трафик на green и оставить blue для отката; снять заморозку релизов монолита.
+2. Оставить основной production-трафик на `blue.monolith`; валидировать `green.monolith` тестировщиками, затем направить небольшую отслеживаемую долю production-трафика на green. Переключить production-трафик на green; blue оставить только как rollback для этого переключения монолита на Kubernetes; снять заморозку релизов монолита.
 
 3. Разработать HotelService по контрактам валидации отелей и бронирования монолита после переключения production-трафика на green. Вносить связанные изменения в сервис и контрактные тесты, либо отложить их до переключения.
 
-4. Развернуть HotelService рядом с `green.monolith`. Кратко заморозить запись данных отелей, преобразовать и скопировать данные отелей в базу сервиса, затем валидировать сервис, пока `green.monolith` остаётся источником истины.
+4. Развернуть HotelService рядом с `green.monolith`. Кратко заморозить запись данных отелей, преобразовать и скопировать данные отелей в базу сервиса, затем валидировать сервис, пока `green.monolith` остаётся источником истины. До переключения источника истины синхронизировать изменения данных отелей из монолита в базу HotelService.
 
 5. После переключения production-трафика на green постепенно направить только `/api/hotels` с `green.monolith` на HotelService в рамках canary-развёртывания. Вернуть этот маршрут на `green.monolith` при необходимости.
 
@@ -142,29 +141,29 @@
 7. Сделать данные HotelService источником истины, затем вывести из эксплуатации код, таблицу и маршрут отелей монолита после стабилизации переключения.
 
 <details>
-<summary>Контейнер-диаграмма: вынос HotelService</summary>
+<summary>Диаграмма: контейнеры при выносе HotelService</summary>
 
-![HotelService Extraction Container](diagrams/.svg/01-task-1.container.c4.svg)
+![HotelService Extraction Container](diagrams/.svg/01-task-1.container.c4.ru.svg)
 
-[Исходный код](diagrams/01-task-1.container.c4.puml)
-
-</details>
-
-<details>
-<summary>Компонент-диаграмма: вынос HotelService</summary>
-
-![HotelService Extraction Components](diagrams/.svg/02-task-1.component.c4.svg)
-
-[Исходный код](diagrams/02-task-1.component.c4.puml)
+[Исходный код](diagrams/01-task-1.container.c4.ru.puml)
 
 </details>
 
 <details>
-<summary>Диаграмма классов: HotelService в процессе выноса</summary>
+<summary>Диаграмма: компоненты HotelService в процессе выноса</summary>
 
-![HotelService During Extraction Class Model](diagrams/.svg/03-task-1-during-extraction.class.svg)
+![HotelService Extraction Components](diagrams/.svg/02-task-1.component.c4.ru.svg)
 
-[Исходный код](diagrams/03-task-1-during-extraction.class.puml)
+[Исходный код](diagrams/02-task-1.component.c4.ru.puml)
+
+</details>
+
+<details>
+<summary>Диаграмма: классы HotelService в процессе выноса</summary>
+
+![HotelService During Extraction Class Model](diagrams/.svg/03-task-1-during-extraction.class.ru.svg)
+
+[Исходный код](diagrams/03-task-1-during-extraction.class.ru.puml)
 
 </details>
 
@@ -176,3 +175,4 @@
 4. BookingService. Оркестрирует остальные функции и записывает бронирования, что делает его самым рискованным по интеграции, транзакциям и управлению данными.
 5. Внедрить Istio после того, как 2–3 сервиса заработают в production.
 6. Добавить GraphQL BFF после появления стабильных сервисных контрактов; мигрировать frontend-клиентов с REST-маршрутов инкрементально.
+7. Внедрить Kafka для асинхронного обмена событиями между вынесенными сервисами и построения read-моделей.
