@@ -1,0 +1,17 @@
+# docker compose -f tests.compose.yml build --no-cache hotelio-tester
+# docker compose -f tests.compose.yml run --rm hotelio-tester
+
+services:
+  hotelio-tester:
+    build:
+      context: .
+    image: hotelio-tester
+    environment:
+      DB_HOST: host.docker.internal
+      DB_PORT: "5432"
+      DB_NAME: hotelio
+      DB_USER: hotelio
+      DB_PASSWORD: hotelio
+      API_URL: http://host.docker.internal:8084
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
