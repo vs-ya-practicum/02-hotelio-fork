@@ -9,3 +9,7 @@
 - [Контейнеры при выносе HotelService](diagrams/.svg/01-task-1.container.c4.ru.svg) — [Исходный код](diagrams/01-task-1.container.c4.ru.puml)
 - [Компоненты при выносе HotelService](diagrams/.svg/02-task-1.component.c4.ru.svg) — [Исходный код](diagrams/02-task-1.component.c4.ru.puml)
 - [Классы HotelService в процессе выноса](diagrams/.svg/03-task-1-during-extraction.class.ru.svg) — [Исходный код](diagrams/03-task-1-during-extraction.class.ru.puml)
+
+## Проверка
+
+[Лог запуска `hotelio-tester`](./test-log.txt)
