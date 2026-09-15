@@ -1,0 +1,16 @@
+# docker compose -f .delivery\configuration\booking.compose.yml up --build
+
+services:
+    booking-service:
+        build:
+            context: ../..
+            dockerfile: .delivery/configuration/booking.dockerfile
+        container_name: booking-service
+        ports:
+            - "9090:9090"
+        networks:
+            - hotelio-net
+
+networks:
+    hotelio-net:
+        external: true

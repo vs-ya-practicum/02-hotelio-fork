@@ -1,0 +1,24 @@
+{
+    "name": "booking",
+    "version": "1.0.0",
+    "description": "",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "tsx src/server.ts"
+    },
+    "keywords": [],
+    "dependencies": {
+        "@grpc/grpc-js": "^1.14.4",
+        "@grpc/proto-loader": "^0.8.1"
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "@types/node": "^26.5.1",
+        "eslint": "^10.10.0",
+        "tsx": "^4.23.13",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.70.0"
+    }
+}
