@@ -5,7 +5,6 @@
     "type": "module",
     "main": "index.js",
     "scripts": {
-        "test": "npm run test:foundation",
         "dev": "tsx src/main.ts",
         "service:compose:build": "docker compose -f .delivery/configuration/booking.compose.yml build --no-cache booking-service",
         "service:compose:up": "docker compose -f .delivery/configuration/booking.compose.yml up",
@@ -13,15 +12,17 @@
         "service:compose:down": "docker compose -f .delivery/configuration/booking.compose.yml down",
         "test:foundation": "npm run vitest",
         "test:e2e": "npx cross-env TEST_INCLUDE=e2e npm run vitest",
-        "vitest": "vitest run --config tests/foundation/.ancillary/config/vitest.config.ts",
+        "vitest": "dotenvx run --env-file test.env -- vitest run --config tests/foundation/.ancillary/config/vitest.config.ts",
         "lint": "eslint .",
         "check-types": "npx tsc --noEmit"
     },
     "keywords": [],
     "dependencies": {
+        "@dotenvx/dotenvx": "^2.25.0",
         "@grpc/grpc-js": "^1.14.4",
         "@grpc/proto-loader": "^0.8.1",
-        "pg": "^8.23.0"
+        "pg": "^8.23.0",
+        "uuid": "^14.0.2"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
