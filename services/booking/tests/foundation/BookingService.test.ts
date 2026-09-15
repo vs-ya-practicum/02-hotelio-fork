@@ -1,6 +1,5 @@
-import { validate as isUUID } from 'uuid';
-
-import { bookingServiceFixture } from '@fixtures/index.js';
+import { bookingServiceFixture, createBooking } from '@fixtures/index.js';
+import { Booking } from '@src/booking/booking.entity.js';
 import { BookingService } from '@src/booking/booking.service.js';
 import { BookingPostgresRepository } from '@src/ports/adapters/outgoing/BookingPostgres.repository.js';
 import { MonolithHTTPRESTAdapter } from '@src/ports/adapters/outgoing/MonolithHTTPREST.adapter.js';
@@ -14,16 +13,18 @@ type TBookingServiceDependencies = {
     is_hotel_fully_booked: boolean;
     user_status: string;
     promo_discount: number | null;
+    bookings: Booking[];
 };
 
 describe('[unit] BookingService Test', () => {
+
     it('constructor(): Should create expected BookingService', () => {
         const actual = createBookingService();
 
         expect(actual.bookingService).toBeInstanceOf(BookingService);
     });
 
-    it('+createBooking(): Should create and save a regular-price booking without a promo code', async () => {
+    it('+createBooking() #1: Should create and save a regular-price booking without a promo code', async () => {
         const actual = createBookingService();
         const input = {
             user_id: bookingServiceFixture.user_id,
@@ -33,7 +34,7 @@ describe('[unit] BookingService Test', () => {
 
         const booking = await actual.bookingService.createBooking(input);
 
-        expect(isUUID(booking.id)).toEqual(true);
+        expect(booking.id).toEqual(bookingServiceFixture.booking_id);
         expect(booking).toMatchObject({
             user_id: input.user_id,
             hotel_id: input.hotel_id,
@@ -42,10 +43,19 @@ describe('[unit] BookingService Test', () => {
             price: bookingServiceFixture.price.regular,
             created_at: expect.any(Date) as Date
         });
-        expect(actual.save).toHaveBeenCalledWith(booking);
+        expect(actual.save).toHaveBeenCalledWith(
+            expect.objectContaining({
+                id: null,
+                user_id: input.user_id,
+                hotel_id: input.hotel_id,
+                promo_code: null,
+                discount_percent: 0,
+                price: bookingServiceFixture.price.regular
+            })
+        );
     });
 
-    it('+createBooking(): Should apply the VIP price and valid promo discount', async () => {
+    it('+createBooking() #2: Should apply the VIP price and valid promo discount', async () => {
         const actual = createBookingService({
             user_status: bookingServiceFixture.user_status.vip,
             promo_discount: bookingServiceFixture.promo_discount
@@ -63,7 +73,26 @@ describe('[unit] BookingService Test', () => {
             discount_percent: bookingServiceFixture.promo_discount,
             price: bookingServiceFixture.price.vip - bookingServiceFixture.promo_discount
         });
-        expect(actual.save).toHaveBeenCalledWith(booking);
+        expect(actual.save).toHaveBeenCalledWith(
+            expect.objectContaining({
+                id: null,
+                user_id: input.user_id,
+                hotel_id: input.hotel_id,
+                promo_code: input.promo_code,
+                discount_percent: bookingServiceFixture.promo_discount,
+                price: bookingServiceFixture.price.vip - bookingServiceFixture.promo_discount
+            })
+        );
+    });
+
+    it('+listBookings(): Should return bookings for the requested user', async () => {
+        const expected = [createBooking()];
+        const actual = createBookingService({ bookings: expected });
+
+        const bookings = await actual.bookingService.listBookings(bookingServiceFixture.user_id);
+
+        expect(bookings).toEqual(expected);
+        expect(actual.findByUserId).toHaveBeenCalledWith(bookingServiceFixture.user_id);
     });
 
     describe('+createBooking() [failure]: Should reject an invalid booking', () => {
@@ -77,7 +106,6 @@ describe('[unit] BookingService Test', () => {
 
     });
 
-
     function createBookingService(self: Partial<TBookingServiceDependencies> = {}) {
         const monolithHTTPRESTAdapter = new MonolithHTTPRESTAdapter();
         const bookingPostgresRepository = new BookingPostgresRepository();
@@ -88,12 +116,24 @@ describe('[unit] BookingService Test', () => {
         vi.spyOn(monolithHTTPRESTAdapter, 'isHotelFullyBooked').mockResolvedValue(self.is_hotel_fully_booked ?? false);
         vi.spyOn(monolithHTTPRESTAdapter, 'getUserStatus').mockResolvedValue(self.user_status ?? bookingServiceFixture.user_status.regular);
         vi.spyOn(monolithHTTPRESTAdapter, 'validatePromo').mockResolvedValue(self.promo_discount ?? null);
-        const save = vi.spyOn(bookingPostgresRepository, 'save').mockResolvedValue();
+        const save = vi.spyOn(bookingPostgresRepository, 'save').mockImplementation(async (booking) => {
+            return new Booking({
+                id: bookingServiceFixture.booking_id,
+                user_id: booking.user_id,
+                hotel_id: booking.hotel_id,
+                promo_code: booking.promo_code,
+                discount_percent: booking.discount_percent,
+                price: booking.price,
+                created_at: booking.created_at
+            });
+        });
+        const findByUserId = vi.spyOn(bookingPostgresRepository, 'findByUserId').mockResolvedValue(self.bookings ?? []);
         const bookingService = new BookingService(monolithHTTPRESTAdapter, bookingPostgresRepository);
 
         return {
             bookingService,
-            save
+            save,
+            findByUserId
         };
     }
 

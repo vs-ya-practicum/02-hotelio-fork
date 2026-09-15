@@ -22,3 +22,15 @@ export function createBooking(): Booking {
         created_at: bookingFixture.created_at
     });
 }
+
+export function createUnsavedBooking(): Booking {
+    return new Booking({
+        id: null,
+        user_id: bookingFixture.user_id,
+        hotel_id: bookingFixture.hotel_id,
+        promo_code: bookingFixture.promo_code,
+        discount_percent: bookingFixture.discount_percent,
+        price: bookingFixture.price,
+        created_at: bookingFixture.created_at
+    });
+}

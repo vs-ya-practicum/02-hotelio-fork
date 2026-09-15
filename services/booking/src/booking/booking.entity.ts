@@ -1,5 +1,5 @@
 export type TBookingPOJO = {
-    id: string;
+    id: string | null;
     user_id: string;
     hotel_id: string;
     promo_code: string | null;
@@ -9,7 +9,7 @@ export type TBookingPOJO = {
 };
 
 export class Booking {
-    public readonly id: string;
+    public readonly id: string | null;
     public readonly user_id: string;
     public readonly hotel_id: string;
     public readonly promo_code: string | null;

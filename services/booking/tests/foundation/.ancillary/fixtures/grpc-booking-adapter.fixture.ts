@@ -1,7 +1,11 @@
 import * as grpc from '@grpc/grpc-js';
 
 import { TCreateBookingInput } from '@src/booking/booking.service.js';
-import { TUnaryCall } from '@src/ports/adapters/incoming/GRPCBooking.adapter.js';
+import {
+    TCreateBookingUnaryCall,
+    TListBookingsInput,
+    TListBookingsUnaryCall
+} from '@src/ports/adapters/incoming/GRPCBooking.adapter.js';
 
 export const grpcBookingAdapterFixture = {
     booking_request: {
@@ -9,16 +13,27 @@ export const grpcBookingAdapterFixture = {
         hotel_id: 'test-hotel-1',
         promo_code: ''
     },
-    list_unimplemented_error: {
-        code: grpc.status.UNIMPLEMENTED,
-        message: 'ListBookings is not implemented yet'
+    list_bookings_request: {
+        user_id: 'test-user-3'
     },
     create_booking_error: {
         code: grpc.status.INTERNAL,
         message: 'Booking creation failed'
+    },
+    list_bookings_error: {
+        code: grpc.status.INTERNAL,
+        message: 'Booking listing failed'
+    },
+    booking_id_error: {
+        code: grpc.status.INTERNAL,
+        message: 'Booking ID is required for a gRPC response'
     }
 };
 
-export function createGRPCUnaryCall(request: TCreateBookingInput): TUnaryCall {
-    return { request } as TUnaryCall;
+export function createCreateBookingUnaryCall(request: TCreateBookingInput): TCreateBookingUnaryCall {
+    return { request } as TCreateBookingUnaryCall;
+}
+
+export function createListBookingsUnaryCall(request: TListBookingsInput): TListBookingsUnaryCall {
+    return { request } as TListBookingsUnaryCall;
 }

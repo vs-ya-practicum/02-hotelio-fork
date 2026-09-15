@@ -113,6 +113,14 @@ describe('[unit] MonolithHTTPRESTAdapter Test', () => {
         ).toBeNull();
     });
 
+    describe('+getUserStatus()/+validatePromo() [failure]: Should reject an invalid monolith response', () => {
+        it.each(dataProvider_monolithResponseFailures())('Case #%#: $name', async (data) => {
+            const monolithHTTPRESTAdapter = new MonolithHTTPRESTAdapter();
+
+            await expect(data.execute(monolithHTTPRESTAdapter)).rejects.toThrow(data.expected_error_message);
+        });
+    });
+
     it('+isUserActive(): Should reject a monolith HTTP failure', async () => {
         stubFetch(createJSONResponse({ error: 'Unexpected failure' }, 500));
         const monolithHTTPRESTAdapter = new MonolithHTTPRESTAdapter();
@@ -153,4 +161,42 @@ function resolveRequestURL(input: string | URL | Request): string {
     }
 
     return input.url;
+}
+
+function dataProvider_monolithResponseFailures() {
+    return [
+        {
+            name: 'User-status HTTP failure',
+            execute: (monolithHTTPRESTAdapter: MonolithHTTPRESTAdapter) => {
+                stubFetch(createTextResponse('', monolithHTTPRESTAdapterFixture.error_status));
+
+                return monolithHTTPRESTAdapter.getUserStatus(monolithHTTPRESTAdapterFixture.user_id);
+            },
+            expected_error_message: `Monolith request failed with HTTP ${monolithHTTPRESTAdapterFixture.error_status}`
+        },
+        {
+            name: 'Promo-validation HTTP failure',
+            execute: (monolithHTTPRESTAdapter: MonolithHTTPRESTAdapter) => {
+                stubFetch(createJSONResponse(null, monolithHTTPRESTAdapterFixture.error_status));
+
+                return monolithHTTPRESTAdapter.validatePromo(
+                    monolithHTTPRESTAdapterFixture.promo_code,
+                    monolithHTTPRESTAdapterFixture.user_id
+                );
+            },
+            expected_error_message: `Monolith request failed with HTTP ${monolithHTTPRESTAdapterFixture.error_status}`
+        },
+        {
+            name: 'Promo validation without a numeric discount',
+            execute: (monolithHTTPRESTAdapter: MonolithHTTPRESTAdapter) => {
+                stubFetch(createJSONResponse(monolithHTTPRESTAdapterFixture.invalid_promo_response));
+
+                return monolithHTTPRESTAdapter.validatePromo(
+                    monolithHTTPRESTAdapterFixture.promo_code,
+                    monolithHTTPRESTAdapterFixture.user_id
+                );
+            },
+            expected_error_message: 'Monolith promo response must contain a numeric discount'
+        }
+    ];
 }

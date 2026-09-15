@@ -13,7 +13,8 @@ services:
         networks:
             - hotelio-net
         depends_on:
-            - booking-db
+            booking-db:
+                condition: service_healthy
         environment:
             DATABASE_URL: postgres://booking:booking@booking-db:5432/booking
             MONOLITH_BASE_URL: http://monolith:8080
@@ -28,6 +29,11 @@ services:
             - "5433:5432"
         volumes:
             - booking-db-data:/var/lib/postgresql/data
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U booking -d booking"]
+            interval: 5s
+            timeout: 5s
+            retries: 10
         networks:
             - hotelio-net
 

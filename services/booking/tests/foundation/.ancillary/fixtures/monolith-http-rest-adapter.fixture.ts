@@ -4,7 +4,9 @@ export const monolithHTTPRESTAdapterFixture = {
     hotel_id: 'test-hotel-1',
     user_status: 'VIP',
     promo_code: 'TESTCODE1',
-    promo_discount: 10
+    promo_discount: 10,
+    error_status: 500,
+    invalid_promo_response: {}
 };
 
 export function createJSONResponse(body: unknown, status = 200): Response {

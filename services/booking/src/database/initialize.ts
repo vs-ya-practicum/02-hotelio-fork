@@ -7,7 +7,7 @@ export const databasePool = new Pool({
 export const initializeDatabase = async (): Promise<void> => {
     await databasePool.query(`
           CREATE TABLE IF NOT EXISTS bookings (
-              id UUID PRIMARY KEY,
+              id BIGSERIAL PRIMARY KEY,
               user_id TEXT NOT NULL,
               hotel_id TEXT NOT NULL,
               promo_code TEXT,

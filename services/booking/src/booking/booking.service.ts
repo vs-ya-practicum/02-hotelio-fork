@@ -1,5 +1,3 @@
-import { v7 as createUUID } from 'uuid';
-
 import { Booking } from '@src/booking/booking.entity.js';
 import { BookingPostgresRepository } from '@src/ports/adapters/outgoing/BookingPostgres.repository.js';
 import { MonolithHTTPRESTAdapter } from '@src/ports/adapters/outgoing/MonolithHTTPREST.adapter.js';
@@ -27,10 +25,9 @@ export class BookingService {
         const promoCode = input.promo_code === '' ? null : input.promo_code;
         const discountPercent = await this.resolvePromoDiscount(promoCode, input.user_id);
         const price = basePrice - discountPercent;
-        const id = createUUID();
         const createdAt = new Date();
         const booking = new Booking({
-            id,
+            id: null,
             user_id: input.user_id,
             hotel_id: input.hotel_id,
             promo_code: promoCode,
@@ -39,9 +36,13 @@ export class BookingService {
             created_at: createdAt
         });
 
-        await this.bookingPostgresRepository.save(booking);
+        const savedBooking = await this.bookingPostgresRepository.save(booking);
 
-        return booking;
+        return savedBooking;
+    }
+
+    public async listBookings(userId: string): Promise<Booking[]> {
+        return await this.bookingPostgresRepository.findByUserId(userId);
     }
 
     private async validateUser(userId: string): Promise<void> {

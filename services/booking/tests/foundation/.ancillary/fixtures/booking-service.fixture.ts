@@ -1,4 +1,5 @@
 export const bookingServiceFixture = {
+    booking_id: '1',
     user_id: 'test-user-3',
     hotel_id: 'test-hotel-1',
     promo_code: 'SUMMER10',

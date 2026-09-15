@@ -4,7 +4,13 @@ import * as protoLoader from '@grpc/proto-loader';
 import { BookingService } from '@src/booking/booking.service.js';
 import { BookingPostgresRepository } from '@src/ports/adapters/outgoing/BookingPostgres.repository.js';
 import { MonolithHTTPRESTAdapter } from '@src/ports/adapters/outgoing/MonolithHTTPREST.adapter.js';
-import { GRPCBookingAdapter, TUnaryCall, TUnaryCallback } from '@src/ports/adapters/incoming/GRPCBooking.adapter.js';
+import {
+    GRPCBookingAdapter,
+    TCreateBookingUnaryCall,
+    TCreateBookingUnaryCallback,
+    TListBookingsUnaryCall,
+    TListBookingsUnaryCallback
+} from '@src/ports/adapters/incoming/GRPCBooking.adapter.js';
 
 const definition = protoLoader.loadSync('./booking.proto', {
     keepCase: true,
@@ -24,10 +30,12 @@ export function startGRPCServer(): grpc.Server {
     const grpcBookingAdapter = new GRPCBookingAdapter(bookingService);
 
     server.addService(proto.booking.BookingService.service, {
-        CreateBooking: (call: TUnaryCall, callback: TUnaryCallback): void => {
+        CreateBooking: (call: TCreateBookingUnaryCall, callback: TCreateBookingUnaryCallback): void => {
             void grpcBookingAdapter.createBooking(call, callback);
         },
-        ListBookings: (call: TUnaryCall, callback: TUnaryCallback) => grpcBookingAdapter.listBookings(call, callback)
+        ListBookings: (call: TListBookingsUnaryCall, callback: TListBookingsUnaryCallback): void => {
+            void grpcBookingAdapter.listBookings(call, callback);
+        }
     });
 
     server.bindAsync('0.0.0.0:9090', grpc.ServerCredentials.createInsecure(), (error) => {

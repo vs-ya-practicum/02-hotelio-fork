@@ -15,9 +15,15 @@ describe('[e2e] BookingService Test', () => {
         expect(await actual.json()).toEqual(bookingIntegrationFixture.health_response);
     });
 
-    it('+CreateBooking(): Should return HTTP 500 while the dummy implementation is unimplemented', async () => {
-        const actual = await fetch(bookingIntegrationFixture.create_booking_url, { method: 'POST' });
+    it('+CreateBooking(): Should create a booking through the monolith', async () => {
+        const response = await fetch(bookingIntegrationFixture.create_booking_url, { method: 'POST' });
+        const body: unknown = await response.json();
+        const actual = {
+            status: response.status,
+            body
+        };
 
-        expect(actual.status).toEqual(500);
+        expect(actual.status).toEqual(200);
+        expect(actual.body).toMatchObject(bookingIntegrationFixture.created_booking_response);
     });
 });
