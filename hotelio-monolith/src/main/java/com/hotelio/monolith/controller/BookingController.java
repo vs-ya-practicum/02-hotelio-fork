@@ -2,6 +2,7 @@ package com.hotelio.monolith.controller;
 
 import com.hotelio.monolith.entity.Booking;
 import com.hotelio.monolith.service.BookingService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,9 +13,14 @@ import java.util.List;
 public class BookingController {
 
     private final BookingService bookingService;
+    private final BookingService grpcBookingService;
 
-    public BookingController(BookingService bookingService) {
+    public BookingController(
+            @Qualifier("bookingService") BookingService bookingService,
+            @Qualifier("grpcBookingService") BookingService grpcBookingService
+    ) {
         this.bookingService = bookingService;
+        this.grpcBookingService = grpcBookingService;
     }
 
     // GET /api/bookings?userId=123
@@ -28,7 +34,7 @@ public class BookingController {
     public ResponseEntity<Booking> createBooking(@RequestParam String userId,
                                                  @RequestParam String hotelId,
                                                  @RequestParam(required = false) String promoCode) {
-        Booking booking = bookingService.createBooking(userId, hotelId, promoCode);
+        Booking booking = grpcBookingService.createBooking(userId, hotelId, promoCode);
         return ResponseEntity.ok(booking);
     }
 }

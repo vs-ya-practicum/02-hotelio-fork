@@ -12,6 +12,11 @@ services:
       DB_NAME: hotelio
       DB_USER: hotelio
       DB_PASSWORD: hotelio
+      BOOKING_DB_HOST: host.docker.internal
+      BOOKING_DB_PORT: "5433"
+      BOOKING_DB_NAME: booking
+      BOOKING_DB_USER: booking
+      BOOKING_DB_PASSWORD: booking
       API_URL: http://host.docker.internal:8084
     extra_hosts:
       - "host.docker.internal:host-gateway"

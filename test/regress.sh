@@ -107,7 +107,18 @@ curl -sSf "${BASE}/api/bookings" | grep -q 'test-user-2' && pass "Все бро�
 curl -sSf "${BASE}/api/bookings?userId=test-user-2" | grep -q 'test-user-2' && pass "Бронирования test-user-2 найдены" || fail "Нет бронирований test-user-2"
 
 # 3. Успешное бронирование отеля без промо
-curl -sSf -X POST "${BASE}/api/bookings?userId=test-user-3&hotelId=test-hotel-1" | grep -q 'test-hotel-1' && pass "Бронирование прошло (без промо)" || fail "Бронирование (без промо) не прошло"
+response=$(curl -sSf -X POST "${BASE}/api/bookings?userId=test-user-3&hotelId=test-hotel-1")
+booking_id=$(printf '%s' "$response" | sed -nE 's/.*"id":([0-9]+).*/\1/p')
+
+[[ -n "$booking_id" ]] || fail "Booking ID was not returned"
+
+PGPASSWORD="${BOOKING_DB_PASSWORD}" psql \
+  -h "${BOOKING_DB_HOST}" -p "${BOOKING_DB_PORT}" \
+  -U "${BOOKING_DB_USER}" "${BOOKING_DB_NAME}" \
+  -tAc "SELECT id FROM bookings WHERE id = ${booking_id};" \
+  | grep -qx "${booking_id}" \
+  && pass "Booking ${booking_id} persisted in booking-service database" \
+  || fail "Booking ${booking_id} is absent from booking-service database"
 
 # 4. Успешное бронирование с промо
 curl -sSf -X POST "${BASE}/api/bookings?userId=test-user-2&hotelId=test-hotel-1&promoCode=TESTCODE1" | grep -q 'TESTCODE1' && pass "Бронирование с промо прошло" || fail "Бронирование с промо не прошло"
