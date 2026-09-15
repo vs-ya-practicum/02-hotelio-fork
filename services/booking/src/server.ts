@@ -1,5 +1,6 @@
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
+import { databasePool } from './database.js';
 
 type TUnaryCall = grpc.ServerUnaryCall<unknown, unknown>;
 type TUnaryCallback = grpc.sendUnaryData<unknown>;
@@ -27,6 +28,9 @@ server.addService(proto.booking.BookingService.service, {
     }
 
 });
+
+await databasePool.query('SELECT 1');
+console.log('booking database is connected');
 
 server.bindAsync('0.0.0.0:9090', grpc.ServerCredentials.createInsecure(), (error) => {
     if (error) throw error;

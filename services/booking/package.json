@@ -1,23 +1,32 @@
 {
     "name": "booking",
-    "version": "1.0.0",
+    "version": "0.0.2",
     "description": "",
     "type": "module",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "tsx src/server.ts",
-        "service:compose:up": "docker compose -f .delivery/configuration/booking.compose.yml up --build",
-        "service:compose:down": "docker compose -f .delivery/configuration/booking.compose.yml down"
+        "service:compose:build": "docker compose -f .delivery/configuration/booking.compose.yml build --no-cache booking-service",
+        "service:compose:up": "docker compose -f .delivery/configuration/booking.compose.yml up",
+        "service:compose:run": "npm run service:compose:build && npm run service:compose:up",
+        
+        "service:compose:down": "docker compose -f .delivery/configuration/booking.compose.yml down",
+        "service:compose:ps": "docker compose -f .delivery/configuration/booking.compose.yml ps",
+        "service:db:check": "docker exec booking-db psql -U booking -d booking -c \"SELECT current_database(), current_user;\"",
+        "service:proxy:unimplemented:check": "test \"$(curl -s -o /dev/null -w '%{http_code}' -X POST 'http://localhost:8084/api/bookings?userId=test-user-3&hotelId=test-hotel-1')\" = \"500\"",
+        "service:check": "npm run service:compose:ps && npm run service:db:check && npm run service:proxy:unimplemented:check"
     },
     "keywords": [],
     "dependencies": {
         "@grpc/grpc-js": "^1.14.4",
-        "@grpc/proto-loader": "^0.8.1"
+        "@grpc/proto-loader": "^0.8.1",
+        "pg": "^8.23.0"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
         "@types/node": "^26.5.1",
+        "@types/pg": "^8.23.1",
         "eslint": "^10.10.0",
         "tsx": "^4.23.13",
         "typescript": "^5.9.3",

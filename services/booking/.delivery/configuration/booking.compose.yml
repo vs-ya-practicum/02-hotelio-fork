@@ -11,7 +11,28 @@ services:
             - "9090:9090"
         networks:
             - hotelio-net
+        depends_on:
+            - booking-db
+        environment:
+            DATABASE_URL: postgres://booking:booking@booking-db:5432/booking
+
+    booking-db:
+        image: postgres:15
+        container_name: booking-db
+        environment:
+            POSTGRES_USER: booking
+            POSTGRES_PASSWORD: booking
+            POSTGRES_DB: booking
+        ports:
+            - "5433:5432"
+        volumes:
+            - booking-db-data:/var/lib/postgresql/data
+        networks:
+            - hotelio-net
 
 networks:
     hotelio-net:
         external: true
+
+volumes:
+    booking-db-data:
