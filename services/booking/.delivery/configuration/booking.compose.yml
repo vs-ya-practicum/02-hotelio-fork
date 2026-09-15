@@ -9,6 +9,7 @@ services:
         image: task2-booking-service
         ports:
             - "9090:9090"
+            - "8081:8081"
         networks:
             - hotelio-net
         depends_on:

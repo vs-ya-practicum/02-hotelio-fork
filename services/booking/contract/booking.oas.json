@@ -1,0 +1,71 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Booking Service Health API",
+        "version": "0.0.2",
+        "description": "Operational health endpoint for booking-service."
+    },
+    "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+    "servers": [
+        {
+            "url": "http://localhost:8081",
+            "description": "Local booking-service health endpoint."
+        }
+    ],
+    "paths": {
+        "/health": {
+            "get": {
+                "operationId": "getHealth",
+                "summary": "Get booking-service health",
+                "description": "Reports whether booking-service is running and can query its booking database.",
+                "tags": ["Health"],
+                "responses": {
+                    "200": {
+                        "description": "booking-service is running and the booking database is available.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BookingServiceHealthResponseVO"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "booking-service is running but cannot query the booking database.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BookingServiceHealthResponseVO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "BookingServiceHealthResponseVO": {
+                "title": "[Booking] BookingServiceHealthResponseVO",
+                "x-display-name": "[Booking] BookingServiceHealthResponseVO",
+                "type": "object",
+                "description": "Current booking-service and booking database health states.",
+                "additionalProperties": false,
+                "required": ["status", "database_status"],
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "enum": ["UP", "DOWN"],
+                        "description": "Current booking-service health state."
+                    },
+                    "database_status": {
+                        "type": "string",
+                        "enum": ["UP", "DOWN"],
+                        "description": "Current booking database health state."
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,38 +1,9 @@
-import * as grpc from '@grpc/grpc-js';
-import * as protoLoader from '@grpc/proto-loader';
 import { initializeDatabase } from './database.js';
-
-type TUnaryCall = grpc.ServerUnaryCall<unknown, unknown>;
-type TUnaryCallback = grpc.sendUnaryData<unknown>;
-
-const definition = protoLoader.loadSync('./booking.proto', {
-    keepCase: true,
-});
-
-const proto = grpc.loadPackageDefinition(definition) as unknown as {
-    booking: {
-        BookingService: grpc.ServiceClientConstructor;
-    };
-};
-
-const server = new grpc.Server();
-
-server.addService(proto.booking.BookingService.service, {
-
-    CreateBooking: (_call: TUnaryCall, callback: TUnaryCallback) => {
-        callback({ code: grpc.status.UNIMPLEMENTED, message: 'CreateBooking is not implemented yet' });
-    },
-
-    ListBookings: (_call: TUnaryCall, callback: TUnaryCallback) => {
-        callback({ code: grpc.status.UNIMPLEMENTED, message: 'ListBookings is not implemented yet' });
-    }
-
-});
+import { startGRPCServer } from './server.grpc.js';
+import { startHTTPServer } from './server.http.js';
 
 await initializeDatabase();
 console.log('booking database is connected');
 
-server.bindAsync('0.0.0.0:9090', grpc.ServerCredentials.createInsecure(), (error) => {
-    if (error) throw error;
-    console.log('booking-service listens on port 9090');
-});
+startHTTPServer();
+startGRPCServer();
