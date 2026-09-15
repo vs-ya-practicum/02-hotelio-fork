@@ -6,7 +6,9 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "tsx src/server.ts"
+        "dev": "tsx src/server.ts",
+        "service:compose:up": "docker compose -f .delivery/configuration/booking.compose.yml up --build",
+        "service:compose:down": "docker compose -f .delivery/configuration/booking.compose.yml down"
     },
     "keywords": [],
     "dependencies": {

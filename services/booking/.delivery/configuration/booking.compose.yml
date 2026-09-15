@@ -1,4 +1,4 @@
-# docker compose -f .delivery\configuration\booking.compose.yml up --build
+# docker compose -f .delivery/configuration/booking.compose.yml up --build
 
 services:
     booking-service:
@@ -6,6 +6,7 @@ services:
             context: ../..
             dockerfile: .delivery/configuration/booking.dockerfile
         container_name: booking-service
+        image: task2-booking-service
         ports:
             - "9090:9090"
         networks:
