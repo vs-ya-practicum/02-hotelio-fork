@@ -6,13 +6,13 @@
         "moduleResolution": "NodeNext",
         "strict": true,
         "skipLibCheck": true,
-        "rootDir": "./src",
-        "outDir": "./.delivery/dist"
+        "rootDir": ".",
+        "outDir": "./.delivery/dist",
+        "paths": {
+            "@src/*": ["./src/*"],
+            "@tests/*": ["./tests/*"],
+            "@fixtures/*": ["./tests/foundation/.ancillary/fixtures/*"]
+        }
     },
-    "paths": {
-        "@src/*": ["./src/*"],
-        "@tests/*": ["./tests/*"],
-        "@fixtures/*": ["./tests/foundation/.ancillary/fixtures/*"]
-    },
-    "include": ["src/**/*.ts"]
+    "include": ["./src", "./eslint.config.mjs", "*.d.ts", "./tests/**/*.ts", "./tests/foundation/integration/.external/**/*.ts", "./tests/foundation/.ancillary/**/*.*"]
 }

@@ -1,6 +1,4 @@
-'use strict';
-
-import 'reflect-metadata';
+// import 'reflect-metadata';
 
 export function setup() {
     // Reserved for foundation test bootstrap.

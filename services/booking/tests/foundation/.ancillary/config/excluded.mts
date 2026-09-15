@@ -2,8 +2,8 @@
  * Set TEST_INCLUDE=.examples,.explorations to include tests from normally excluded folders.
  */
 export default function excluded(defaults: string[]) {
-    const base = [...defaults, 'tests/e2e/*'];
-    const additional = ['**/examples', '**/explorations', '**/integration'];
+    const base = [...defaults];
+    const additional = ['tests/e2e/*', '**/examples', '**/explorations', '**/integration'];
 
     const toInclude = process.env.TEST_INCLUDE?.split(',') || [];
 
