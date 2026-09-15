@@ -1,0 +1,33 @@
+{
+    "name": "booking-history",
+    "version": "0.0.1",
+    "description": "",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+        "dev": "tsx src/main.ts",
+        "test:foundation": "npm run vitest",
+        "test:e2e": "npx cross-env TEST_INCLUDE=e2e npm run vitest",
+        "vitest": "dotenvx run --env-file test.env -- vitest run --config tests/foundation/.ancillary/config/vitest.config.ts",
+        "lint": "eslint .",
+        "check-types": "npx tsc --noEmit"
+    },
+    "keywords": [],
+    "dependencies": {
+        "@dotenvx/dotenvx": "^2.25.0",
+        "kafkajs": "^2.2.4",
+        "pg": "^8.23.0"
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "@types/node": "^26.5.1",
+        "@types/pg": "^8.23.1",
+        "@vitest/coverage-v8": "^4.1.11",
+        "eslint": "^10.10.0",
+        "prettier": "^3.8.4",
+        "tsx": "^4.23.13",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.70.0",
+        "vitest": "^4.1.9"
+    }
+}
