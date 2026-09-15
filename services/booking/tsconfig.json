@@ -1,12 +1,18 @@
 {
     "compilerOptions": {
+        "tsBuildInfoFile": "./.delivery/.temp/.tsbuildinfo",
         "target": "ES2022",
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
         "strict": true,
         "skipLibCheck": true,
         "rootDir": "./src",
-        "outDir": "./dist"
+        "outDir": "./.delivery/dist"
+    },
+    "paths": {
+        "@src/*": ["./src/*"],
+        "@tests/*": ["./tests/*"],
+        "@fixtures/*": ["./tests/foundation/.ancillary/fixtures/*"]
     },
     "include": ["src/**/*.ts"]
 }
