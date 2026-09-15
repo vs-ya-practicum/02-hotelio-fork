@@ -6,18 +6,16 @@
     "main": "index.js",
     "scripts": {
         "test": "npm run test:foundation",
-        "dev": "tsx src/server.ts",
+        "dev": "tsx src/main.ts",
         "service:compose:build": "docker compose -f .delivery/configuration/booking.compose.yml build --no-cache booking-service",
         "service:compose:up": "docker compose -f .delivery/configuration/booking.compose.yml up",
         "service:compose:run": "npm run service:compose:build && npm run service:compose:up",
         "service:compose:down": "docker compose -f .delivery/configuration/booking.compose.yml down",
-        "service:compose:ps": "docker compose -f .delivery/configuration/booking.compose.yml ps",
-        "service:db:check": "docker exec booking-db psql -U booking -d booking -c \"SELECT current_database(), current_user;\"",
-        "service:proxy:unimplemented:check": "test \"$(curl -s -o /dev/null -w '%{http_code}' -X POST 'http://localhost:8084/api/bookings?userId=test-user-3&hotelId=test-hotel-1')\" = \"500\"",
-        "service:check": "npm run service:compose:ps && npm run service:db:check && npm run service:proxy:unimplemented:check",
         "test:foundation": "npm run vitest",
         "test:e2e": "npx cross-env TEST_INCLUDE=e2e npm run vitest",
-        "vitest": "vitest run --config tests/foundation/.ancillary/config/vitest.config.mts"
+        "vitest": "vitest run --config tests/foundation/.ancillary/config/vitest.config.ts",
+        "lint": "eslint .",
+        "check-types": "npx tsc --noEmit"
     },
     "keywords": [],
     "dependencies": {

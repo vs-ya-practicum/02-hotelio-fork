@@ -2,7 +2,7 @@ import { cwd } from 'node:process';
 import { resolve } from 'node:path';
 import { configDefaults, defineConfig } from 'vitest/config';
 
-import _excluded from './excluded.mts';
+import _excluded from './excluded.js';
 
 const root = cwd();
 const excluded = _excluded(configDefaults.exclude);

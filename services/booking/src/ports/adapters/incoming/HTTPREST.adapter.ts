@@ -1,7 +1,8 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
-import { databasePool } from './database/initialize.js';
+import { databasePool } from '@src/database/initialize.js';
 
+// REFACTOR: to an enum here and everywhere in the code.
 type THealthStatus = 'UP' | 'DOWN';
 
 type THealthResponse = {

@@ -1,6 +1,6 @@
 import { createServer, type Server } from 'node:http';
 
-import { HTTPRESTAdapter } from '../HTTPRest.adapter.js';
+import { HTTPRESTAdapter } from '@src/ports/adapters/incoming/HTTPREST.adapter.js';
 
 export function startHTTPServer(): Server {
     const httpRESTAdapter = new HTTPRESTAdapter();
