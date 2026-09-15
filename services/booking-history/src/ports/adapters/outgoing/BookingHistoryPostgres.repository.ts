@@ -1,7 +1,15 @@
+import { Pool } from 'pg';
+
 import { BookingCreatedEvent } from '@src/booking-history/booking-created.event.js';
 import { databasePool } from '@src/database/initialize.js';
 
 export class BookingHistoryPostgresRepository {
+    private readonly databasePool: Pool;
+
+    public constructor(pool: Pool = databasePool) {
+        this.databasePool = pool;
+    }
+
     public async save(event: BookingCreatedEvent): Promise<void> {
         const query = `
             INSERT INTO booking_history (
@@ -25,6 +33,6 @@ export class BookingHistoryPostgresRepository {
             event.created_at
         ];
 
-        await databasePool.query(query, values);
+        await this.databasePool.query(query, values);
     }
 }

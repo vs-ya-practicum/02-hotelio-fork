@@ -4,8 +4,8 @@ export const databasePool = new Pool({
     connectionString: process.env.DATABASE_URL,
 });
 
-export const initializeDatabase = async (): Promise<void> => {
-    await databasePool.query(`
+export const initializeDatabase = async (pool: Pool = databasePool): Promise<void> => {
+    await pool.query(`
         CREATE TABLE IF NOT EXISTS booking_history (
             booking_id TEXT PRIMARY KEY,
             user_id TEXT NOT NULL,
@@ -18,12 +18,12 @@ export const initializeDatabase = async (): Promise<void> => {
         );
     `);
 
-    await databasePool.query(`
+    await pool.query(`
         CREATE INDEX IF NOT EXISTS booking_history_user_id_idx
         ON booking_history (user_id);
     `);
 
-    await databasePool.query(`
+    await pool.query(`
         CREATE INDEX IF NOT EXISTS booking_history_hotel_id_idx
         ON booking_history (hotel_id);
     `);
