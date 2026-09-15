@@ -5,7 +5,7 @@ title Create Booking Sequence
 actor User as user
 control "Hotelio monolith\nBookingController" as monolith #lightgreen
 control GRPCBookingAdapter as grpc_booking_adapter #lightgreen
-control "booking-service\nCreateBooking workflow" as booking_service #orange
+control BookingService as booking_service #lightgreen
 control MonolithHTTPRESTAdapter as monolith_http_rest_adapter #orange
 database "booking-db\nbookings" as booking_db #lightgreen
 queue Kafka as kafka #orange
@@ -17,9 +17,9 @@ legend right
 |<#orange> | Planned |
 endlegend
 
-user -> monolith : POST /api/bookings(user_id, hotel_id, promo_code)
+user -> monolith : POST /api/bookings?userId&hotelId&promoCode
 monolith -> grpc_booking_adapter : CreateBooking(user_id, hotel_id, promo_code)
-grpc_booking_adapter -> booking_service : CreateBooking(request)
+grpc_booking_adapter -> booking_service : createBooking(request)
 
 booking_service -> monolith_http_rest_adapter : isUserActive(user_id)
 monolith_http_rest_adapter -> monolith : GET /api/users/{user_id}/active

@@ -2,6 +2,7 @@ import { bookingServiceFixture, createBooking } from '@fixtures/index.js';
 import { Booking } from '@src/booking/booking.entity.js';
 import { BookingService } from '@src/booking/booking.service.js';
 import { BookingPostgresRepository } from '@src/ports/adapters/outgoing/BookingPostgres.repository.js';
+import { KafkaBookingEventAdapter } from '@src/ports/adapters/outgoing/KafkaBookingEvent.adapter.js';
 import { MonolithHTTPRESTAdapter } from '@src/ports/adapters/outgoing/MonolithHTTPREST.adapter.js';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -53,6 +54,9 @@ describe('[unit] BookingService Test', () => {
                 price: bookingServiceFixture.price.regular
             })
         );
+        expect(actual.publishBookingCreated).toHaveBeenCalledWith(
+            expect.objectContaining({ booking_id: bookingServiceFixture.booking_id })
+        );
     });
 
     it('+createBooking() #2: Should apply the VIP price and valid promo discount', async () => {
@@ -83,6 +87,9 @@ describe('[unit] BookingService Test', () => {
                 price: bookingServiceFixture.price.vip - bookingServiceFixture.promo_discount
             })
         );
+        expect(actual.publishBookingCreated).toHaveBeenCalledWith(
+            expect.objectContaining({ booking_id: bookingServiceFixture.booking_id })
+        );
     });
 
     it('+listBookings(): Should return bookings for the requested user', async () => {
@@ -109,6 +116,7 @@ describe('[unit] BookingService Test', () => {
     function createBookingService(self: Partial<TBookingServiceDependencies> = {}) {
         const monolithHTTPRESTAdapter = new MonolithHTTPRESTAdapter();
         const bookingPostgresRepository = new BookingPostgresRepository();
+        const kafkaBookingEventAdapter = new KafkaBookingEventAdapter();
         vi.spyOn(monolithHTTPRESTAdapter, 'isUserActive').mockResolvedValue(self.is_user_active ?? true);
         vi.spyOn(monolithHTTPRESTAdapter, 'isUserBlacklisted').mockResolvedValue(self.is_user_blacklisted ?? false);
         vi.spyOn(monolithHTTPRESTAdapter, 'isHotelOperational').mockResolvedValue(self.is_hotel_operational ?? true);
@@ -128,12 +136,14 @@ describe('[unit] BookingService Test', () => {
             });
         });
         const findByUserId = vi.spyOn(bookingPostgresRepository, 'findByUserId').mockResolvedValue(self.bookings ?? []);
-        const bookingService = new BookingService(monolithHTTPRESTAdapter, bookingPostgresRepository);
+        const publishBookingCreated = vi.spyOn(kafkaBookingEventAdapter, 'publishBookingCreated').mockResolvedValue();
+        const bookingService = new BookingService(monolithHTTPRESTAdapter, bookingPostgresRepository, kafkaBookingEventAdapter);
 
         return {
             bookingService,
             save,
-            findByUserId
+            findByUserId,
+            publishBookingCreated
         };
     }
 

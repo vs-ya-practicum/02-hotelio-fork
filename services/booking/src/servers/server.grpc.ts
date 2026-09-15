@@ -2,8 +2,6 @@ import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 
 import { BookingService } from '@src/booking/booking.service.js';
-import { BookingPostgresRepository } from '@src/ports/adapters/outgoing/BookingPostgres.repository.js';
-import { MonolithHTTPRESTAdapter } from '@src/ports/adapters/outgoing/MonolithHTTPREST.adapter.js';
 import {
     GRPCBookingAdapter,
     TCreateBookingUnaryCall,
@@ -22,11 +20,8 @@ const proto = grpc.loadPackageDefinition(definition) as unknown as {
     };
 };
 
-export function startGRPCServer(): grpc.Server {
+export function startGRPCServer(bookingService: BookingService): grpc.Server {
     const server = new grpc.Server();
-    const monolithHTTPRESTAdapter = new MonolithHTTPRESTAdapter();
-    const bookingPostgresRepository = new BookingPostgresRepository();
-    const bookingService = new BookingService(monolithHTTPRESTAdapter, bookingPostgresRepository);
     const grpcBookingAdapter = new GRPCBookingAdapter(bookingService);
 
     server.addService(proto.booking.BookingService.service, {

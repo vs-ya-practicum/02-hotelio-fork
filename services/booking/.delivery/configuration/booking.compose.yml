@@ -18,6 +18,8 @@ services:
         environment:
             DATABASE_URL: postgres://booking:booking@booking-db:5432/booking
             MONOLITH_BASE_URL: http://monolith:8080
+            KAFKA_BROKERS: kafka:9092
+            KAFKA_BOOKING_CREATED_TOPIC: booking.created
     booking-db:
         image: postgres:15
         container_name: booking-db

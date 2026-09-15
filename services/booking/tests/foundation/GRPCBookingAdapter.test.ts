@@ -9,6 +9,7 @@ import {
 } from '@fixtures/index.js';
 import { BookingService } from '@src/booking/booking.service.js';
 import { BookingPostgresRepository } from '@src/ports/adapters/outgoing/BookingPostgres.repository.js';
+import { KafkaBookingEventAdapter } from '@src/ports/adapters/outgoing/KafkaBookingEvent.adapter.js';
 import { MonolithHTTPRESTAdapter } from '@src/ports/adapters/outgoing/MonolithHTTPREST.adapter.js';
 import {
     GRPCBookingAdapter,
@@ -113,8 +114,9 @@ describe('[unit] GRPCBookingAdapter Test', () => {
 function createBookingService(): BookingService {
     const monolithHTTPRESTAdapter = new MonolithHTTPRESTAdapter();
     const bookingPostgresRepository = new BookingPostgresRepository();
+    const kafkaBookingEventAdapter = new KafkaBookingEventAdapter();
 
-    return new BookingService(monolithHTTPRESTAdapter, bookingPostgresRepository);
+    return new BookingService(monolithHTTPRESTAdapter, bookingPostgresRepository, kafkaBookingEventAdapter);
 }
 
 function createCallbackResult<TResponse = TBookingResponse>() {

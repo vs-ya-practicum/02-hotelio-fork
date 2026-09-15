@@ -1,5 +1,7 @@
 import { Booking } from '@src/booking/booking.entity.js';
+import { BookingCreatedEvent } from '@src/booking/booking-created.event.js';
 import { BookingPostgresRepository } from '@src/ports/adapters/outgoing/BookingPostgres.repository.js';
+import { KafkaBookingEventAdapter } from '@src/ports/adapters/outgoing/KafkaBookingEvent.adapter.js';
 import { MonolithHTTPRESTAdapter } from '@src/ports/adapters/outgoing/MonolithHTTPREST.adapter.js';
 
 export type TCreateBookingInput = {
@@ -11,10 +13,16 @@ export type TCreateBookingInput = {
 export class BookingService {
     private readonly monolithHTTPRESTAdapter: MonolithHTTPRESTAdapter;
     private readonly bookingPostgresRepository: BookingPostgresRepository;
+    private readonly kafkaBookingEventAdapter: KafkaBookingEventAdapter;
 
-    public constructor(monolithHTTPRESTAdapter: MonolithHTTPRESTAdapter, bookingPostgresRepository: BookingPostgresRepository) {
+    public constructor(
+        monolithHTTPRESTAdapter: MonolithHTTPRESTAdapter,
+        bookingPostgresRepository: BookingPostgresRepository,
+        kafkaBookingEventAdapter: KafkaBookingEventAdapter
+    ) {
         this.monolithHTTPRESTAdapter = monolithHTTPRESTAdapter;
         this.bookingPostgresRepository = bookingPostgresRepository;
+        this.kafkaBookingEventAdapter = kafkaBookingEventAdapter;
     }
 
     public async createBooking(input: TCreateBookingInput): Promise<Booking> {
@@ -37,6 +45,9 @@ export class BookingService {
         });
 
         const savedBooking = await this.bookingPostgresRepository.save(booking);
+        const bookingCreatedEvent = new BookingCreatedEvent(savedBooking);
+
+        await this.kafkaBookingEventAdapter.publishBookingCreated(bookingCreatedEvent);
 
         return savedBooking;
     }
