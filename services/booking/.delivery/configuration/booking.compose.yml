@@ -16,7 +16,7 @@ services:
             - booking-db
         environment:
             DATABASE_URL: postgres://booking:booking@booking-db:5432/booking
-
+            MONOLITH_BASE_URL: http://monolith:8080
     booking-db:
         image: postgres:15
         container_name: booking-db
