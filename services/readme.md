@@ -25,6 +25,34 @@ npm run service:compose:run
 
 If a service reports `getaddrinfo ENOTFOUND kafka`, Kafka is not running on `hotelio-net`. Start the Task 2 stack above and then restart that service.
 
+## Full Task 2 startup and result workflow (WSL)
+
+Run the commands in this order. Keep the two microservice Compose commands running in separate terminals.
+
+```bash
+# Terminal 1: Task 2 infrastructure, monolith, Kafka, and ZooKeeper.
+cd hotelio-fork/tasks/task2
+docker network create hotelio-net 2>/dev/null || true
+docker compose up -d --build
+
+# Terminal 2: booking-service and its PostgreSQL database.
+cd hotelio-fork/services/booking
+npm run service:compose:run
+
+# Terminal 3: booking-history-service and its PostgreSQL database.
+cd hotelio-fork/services/booking-history
+npm run service:compose:run
+```
+
+After both services report that they started, run the regression suite from a fourth terminal:
+
+```bash
+cd hotelio-fork/test
+docker compose -f tests.compose.yml run --rm hotelio-tester
+```
+
+Then generate the submission files from `hotelio-fork/tasks/task2` with the commands in [Task 2 result preparation (WSL)](#task-2-result-preparation-wsl).
+
 ## Task 2 result preparation (WSL)
 
 Run these commands after the monolith, Kafka, `booking-service`, and `booking-history-service` are running. They create the files required in `tasks/task2/results`.
