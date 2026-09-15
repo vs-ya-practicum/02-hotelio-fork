@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
-import { databasePool } from './database.js';
+import { databasePool } from './database/initialize.js';
 
 type THealthStatus = 'UP' | 'DOWN';
 
