@@ -1,27 +1,41 @@
 # Task 3 implementation
 
-## Run the booking subgraph
+This workspace implements a federated GraphQL API for hotel bookings.
 
-Run this command from the Task 3 workspace root:
+## Structure
+
+- `services/booking-subgraph` — bookings, access control, and booking-to-hotel references.
+- `services/hotel-subgraph` — hotel descriptions and request-scoped DataLoader batching.
+- `services/promocode-subgraph` — promocodes and booking discount information.
+- `services/gateway` — composes the three subgraphs into the public GraphQL API.
+- `.delivery/task3.compose.yml` — runs the complete Docker stack.
+- `.testing/vitest.workspace.ts` — registers the Vitest projects.
+
+## Run the complete API
+
+From this directory, run:
 
 ```powershell
-docker compose -f .delivery/booking-subgraph/subgraph.compose.yml up --build
+npm run task3:compose:run
 ```
 
-This produces the independently runnable booking subgraph. It is the first component of Task 3’s federated GraphQL API: later, Apollo Gateway will combine its booking data with hotel data from the hotel subgraph into one API.
+It rebuilds the four Docker services without using cached layers, then starts them. The public GraphQL endpoint is `http://localhost:4000/`.
 
-## Testing
-
-Vitest is installed once at the Task 3 workspace root. `.testing/vitest.workspace.ts` registers each package test project; each package keeps its own tests under `tests/foundation/`.
-
-Run all registered package tests from the Task 3 workspace root:
+Stop the stack with:
 
 ```powershell
-npm test
+npm run task3:compose:down
 ```
 
-Run only the booking-subgraph foundation tests:
+## Validate
 
 ```powershell
-npm run test:foundation --workspace booking-subgraph
+npm run check-types
+npm run test:foundation
+```
+
+With the Docker stack running, execute the gateway end-to-end tests:
+
+```powershell
+npm run test:e2e
 ```

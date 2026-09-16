@@ -1,14 +1,16 @@
 extend schema
     @link(
         url: "https://specs.apollo.dev/federation/v2.3"
-        import: ["@external", "@key", "@override", "@requires"]
+        import: ["@external", "@inaccessible", "@key", "@override", "@requires"]
     )
 
 extend type Booking @key(fields: "id") {
     id: ID! @external
     promoCode: String @external
+    originalDiscountPercent: Float @external
     discountPercent: Float! @override(from: "booking")
-    discountInfo: DiscountInfo @requires(fields: "promoCode")
+        @requires(fields: "promoCode originalDiscountPercent")
+    discountInfo: DiscountInfo @requires(fields: "promoCode originalDiscountPercent")
 }
 
 type DiscountInfo {

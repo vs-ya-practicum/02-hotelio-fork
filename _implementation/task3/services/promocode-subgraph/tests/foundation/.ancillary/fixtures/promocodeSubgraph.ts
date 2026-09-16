@@ -3,7 +3,7 @@ export const validatePromoCodeFixture = {
     expectedResponseData: {
         validatePromoCode: {
             isValid: true,
-            originalDiscount: 20,
+            originalDiscount: 0,
             finalDiscount: 25,
             description: 'Summer promotion',
             expiresAt: '2099-12-31',
@@ -17,7 +17,7 @@ export const activePromoCodesFixture = {
         activePromoCodes: [
             {
                 isValid: true,
-                originalDiscount: 20,
+                originalDiscount: 0,
                 finalDiscount: 25,
                 description: 'Summer promotion',
                 expiresAt: '2099-12-31',
@@ -29,7 +29,14 @@ export const activePromoCodesFixture = {
 
 export const bookingDiscountInfoFixture = {
     variables: {
-        representations: [{ __typename: 'Booking', id: 'b1', promoCode: 'SUMMER' }]
+        representations: [
+            {
+                __typename: 'Booking',
+                id: 'b1',
+                promoCode: 'SUMMER',
+                originalDiscountPercent: 20
+            }
+        ]
     },
     expectedResponseData: {
         _entities: [

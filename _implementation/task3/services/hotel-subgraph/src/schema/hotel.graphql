@@ -6,5 +6,5 @@ type Hotel @key(fields: "id") {
 }
 
 type Query {
-    hotelsByIds(ids: [ID!]!): [Hotel]
+    hotelsByIds(ids: [ID!]!): [Hotel]!
 }

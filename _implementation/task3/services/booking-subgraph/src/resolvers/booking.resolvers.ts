@@ -10,6 +10,9 @@ const bookings = [
 
 export const bookingResolvers = {
     Booking: {
+        originalDiscountPercent: ({ discountPercent }: { discountPercent: number }) => {
+            return discountPercent;
+        },
         hotel: ({ hotelId }: { hotelId: string }) => {
             return { __typename: 'Hotel', id: hotelId };
         }

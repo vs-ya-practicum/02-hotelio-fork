@@ -1,7 +1,6 @@
 const promoCodes = [
     {
         code: 'SUMMER',
-        originalDiscount: 20,
         finalDiscount: 25,
         description: 'Summer promotion',
         expiresAt: '2099-12-31',
@@ -16,14 +15,18 @@ function findActivePromoCode(code: string): PromoCode | undefined {
     return promoCodes.find((promoCode) => promoCode.code === code && promoCode.isActive);
 }
 
-function createDiscountInfo(promoCode: PromoCode | undefined, hotelId?: string) {
+function createDiscountInfo(
+    promoCode: PromoCode | undefined,
+    originalDiscount = 0,
+    hotelId?: string
+) {
     const isValid = Boolean(
         promoCode && (!hotelId || promoCode.applicableHotels.includes(hotelId))
     );
 
     return {
         isValid,
-        originalDiscount: promoCode?.originalDiscount ?? 0,
+        originalDiscount,
         finalDiscount: isValid ? promoCode.finalDiscount : 0,
         description: promoCode?.description ?? null,
         expiresAt: promoCode?.expiresAt ?? null,
@@ -33,18 +36,40 @@ function createDiscountInfo(promoCode: PromoCode | undefined, hotelId?: string) 
 
 export const promocodeResolvers = {
     Booking: {
-        discountPercent: ({ promoCode }: { promoCode?: string | null }) => {
-            return createDiscountInfo(findActivePromoCode(promoCode ?? '')).finalDiscount;
+        discountPercent: (
+            {
+                promoCode,
+                originalDiscountPercent
+            }: {
+                promoCode?: string | null;
+                originalDiscountPercent?: number | null;
+            }
+        ) => {
+            return createDiscountInfo(
+                findActivePromoCode(promoCode ?? ''),
+                originalDiscountPercent ?? 0
+            ).finalDiscount;
         },
-        discountInfo: ({ promoCode }: { promoCode?: string | null }) => {
-            return createDiscountInfo(findActivePromoCode(promoCode ?? ''));
+        discountInfo: (
+            {
+                promoCode,
+                originalDiscountPercent
+            }: {
+                promoCode?: string | null;
+                originalDiscountPercent?: number | null;
+            }
+        ) => {
+            return createDiscountInfo(
+                findActivePromoCode(promoCode ?? ''),
+                originalDiscountPercent ?? 0
+            );
         }
     },
     Query: {
         validatePromoCode: (_parent: unknown, { code, hotelId }: { code: string; hotelId?: string }) => {
             const promoCode = findActivePromoCode(code);
 
-            return createDiscountInfo(promoCode, hotelId);
+            return createDiscountInfo(promoCode, 0, hotelId);
         },
         activePromoCodes: () => {
             return promoCodes
