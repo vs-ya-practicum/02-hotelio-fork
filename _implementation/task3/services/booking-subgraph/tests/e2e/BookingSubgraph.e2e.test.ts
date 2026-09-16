@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { bookingsByUserFixture, bookingSubgraphE2E } from '@fixtures';
+import { bookingsByUserFixture, bookingSubgraphE2E } from '@fixtures/index.js';
 
 describe('[e2e] BookingSubgraph Test', () => {
+    
     it('+GraphQL endpoint: Should return the query root from the running container', async () => {
         const response = await fetch(process.env.BOOKING_SUBGRAPH_URL ?? bookingSubgraphE2E.endpoint, {
             method: 'POST',
@@ -29,4 +30,5 @@ describe('[e2e] BookingSubgraph Test', () => {
         expect(response.ok).toEqual(true);
         expect(actual).toMatchObject({ data: bookingsByUserFixture.expectedResponseData });
     });
+    
 });

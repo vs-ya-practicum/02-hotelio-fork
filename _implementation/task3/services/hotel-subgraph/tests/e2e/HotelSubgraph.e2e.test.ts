@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import hotelsByIdsQuery from '@fixtures/hotelsByIds.graphql?raw';
-import { hotelsByIdsFixture } from '@fixtures';
+import { hotelsByIdsFixture } from '@fixtures/index.js';
 
 describe('[e2e] HotelSubgraph Test', () => {
     it('+hotelsByIds(): Should return hotel descriptions from the running container', async () => {

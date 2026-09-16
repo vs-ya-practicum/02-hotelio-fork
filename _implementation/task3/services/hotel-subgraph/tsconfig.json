@@ -5,11 +5,18 @@
         "rootDir": ".",
         "outDir": ".delivery/.builds/dist",
         "tsBuildInfoFile": ".delivery/.temp/hotel-subgraph.tsbuildinfo",
+        "types": ["vite/client"],
         "paths": {
             "@src/*": ["./src/*"],
             "@tests/*": ["./tests/*"],
             "@fixtures/*": ["./tests/foundation/.ancillary/fixtures/*"]
         }
     },
-    "include": ["src/**/*.ts"]
+    "include": [
+        "src/**/*.ts",
+        "tests/**/*.test.ts",
+        "tests/**/*.d.ts",
+        "tests/foundation/.ancillary/fixtures/**/*.ts"
+    ],
+    "exclude": [".delivery/.builds/**", ".delivery/.temp/**"]
 }

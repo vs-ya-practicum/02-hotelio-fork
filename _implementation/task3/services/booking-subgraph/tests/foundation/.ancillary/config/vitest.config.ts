@@ -23,12 +23,6 @@ export default defineProject({
         name: 'booking-subgraph',
         include: ['tests/**/*.test.ts'],
         exclude: excluded,
-        cache: false,
-        setupFiles: [resolve(testsRoot, 'foundation/.ancillary/bootstrap/setup.ts')],
-        coverage: {
-            provider: 'v8',
-            include: ['index.ts'],
-            reportsDirectory: resolve(testsRoot, 'foundation/.coverage')
-        }
+        setupFiles: [resolve(testsRoot, 'foundation/.ancillary/bootstrap/setup.ts')]
     }
 });

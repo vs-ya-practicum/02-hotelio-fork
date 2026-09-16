@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import hotelsByIdsQuery from '@fixtures/hotelsByIds.graphql?raw';
-import { hotelsByIdsFixture } from '@fixtures';
-import { createHotelSubgraphServer } from '@src/subgraph';
+import { hotelsByIdsFixture } from '@fixtures/index.js';
+import { createHotelSubgraphServer } from '@src/subgraph.js';
 
 describe('[unit] HotelSubgraph Test', () => {
     it('+createHotelSubgraphServer(): Should expose the GraphQL query root', async () => {

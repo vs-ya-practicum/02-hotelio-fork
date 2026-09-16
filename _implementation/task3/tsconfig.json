@@ -7,8 +7,11 @@
     "strict": false,
     "skipLibCheck": true
   },
-  "files": [],
-    "references": [
+  "include": [
+    ".testing/**/*.ts",
+    "services/*/tests/foundation/.ancillary/config/**/*.ts"
+  ],
+  "references": [
         { "path": "./services/booking-subgraph" },
         { "path": "./services/hotel-subgraph" }
     ]

@@ -23,12 +23,6 @@ export default defineProject({
         name: 'hotel-subgraph',
         include: ['tests/**/*.test.ts'],
         exclude: excluded,
-        cache: false,
-        setupFiles: [resolve(testsRoot, 'foundation/.ancillary/bootstrap/setup.ts')],
-        coverage: {
-            provider: 'v8',
-            include: ['src/**/*.ts'],
-            reportsDirectory: resolve(testsRoot, 'foundation/.coverage')
-        }
+        setupFiles: [resolve(testsRoot, 'foundation/.ancillary/bootstrap/setup.ts')]
     }
 });
