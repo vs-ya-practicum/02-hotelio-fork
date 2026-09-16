@@ -1,0 +1,16 @@
+name: task3-impl
+
+services:
+  booking-subgraph:
+    build:
+      context: ..
+      dockerfile: .delivery/booking-subgraph/Dockerfile
+    ports:
+      - "4001:4001"
+
+  hotel-subgraph:
+    build:
+      context: ..
+      dockerfile: .delivery/hotel-subgraph/Dockerfile
+    ports:
+      - "4002:4002"
