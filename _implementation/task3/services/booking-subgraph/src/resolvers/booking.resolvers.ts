@@ -10,7 +10,13 @@ const bookings = [
 
 export const bookingResolvers = {
     Query: {
-        bookingsByUser: (_parent: unknown, { userId }: { userId: string }) => {
+        bookingsByUser: (_parent: unknown, { userId }: { userId: string }, { req }) => {
+            const requesterId = req.headers['userid'];
+
+            if (requesterId !== userId) {
+                return [];
+            }
+
             return bookings.filter((booking) => booking.userId === userId);
         }
     }

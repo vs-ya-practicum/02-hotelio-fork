@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { bookingsByUserFixture } from '@fixtures';
 import { createBookingSubgraphServer } from '@src/subgraph';
 
 describe('[unit] BookingSubgraph Test', () => {
@@ -12,6 +13,48 @@ describe('[unit] BookingSubgraph Test', () => {
 
         if (actual.body.kind === 'single') {
             expect(actual.body.singleResult.data).toEqual({ __typename: 'Query' });
+        }
+    });
+
+    it('+bookingsByUser(): Should return bookings for user1', async () => {
+        const server = createBookingSubgraphServer();
+        const actual = await server.executeOperation({
+            query: bookingsByUserFixture.query,
+            variables: bookingsByUserFixture.variables
+        }, { contextValue: bookingsByUserFixture.authorizedContextValue });
+
+        expect(actual.body.kind).toEqual('single');
+
+        if (actual.body.kind === 'single') {
+            expect(actual.body.singleResult.data).toEqual(bookingsByUserFixture.expectedResponseData);
+        }
+    });
+
+    it('+bookingsByUser(): Should return no bookings for a different user', async () => {
+        const server = createBookingSubgraphServer();
+        const actual = await server.executeOperation({
+            query: bookingsByUserFixture.query,
+            variables: bookingsByUserFixture.variables
+        }, { contextValue: bookingsByUserFixture.unauthorizedContextValue });
+
+        expect(actual.body.kind).toEqual('single');
+
+        if (actual.body.kind === 'single') {
+            expect(actual.body.singleResult.data).toEqual(bookingsByUserFixture.emptyResponseData);
+        }
+    });
+
+    it('+bookingsByUser(): Should return no bookings without user identity', async () => {
+        const server = createBookingSubgraphServer();
+        const actual = await server.executeOperation({
+            query: bookingsByUserFixture.query,
+            variables: bookingsByUserFixture.variables
+        }, { contextValue: bookingsByUserFixture.unauthenticatedContextValue });
+
+        expect(actual.body.kind).toEqual('single');
+
+        if (actual.body.kind === 'single') {
+            expect(actual.body.singleResult.data).toEqual(bookingsByUserFixture.emptyResponseData);
         }
     });
 });
