@@ -4,7 +4,7 @@
         "composite": true,
         "rootDir": ".",
         "outDir": ".delivery/.builds/dist",
-        "tsBuildInfoFile": ".delivery/.temp/gateway.tsbuildinfo",
+        "tsBuildInfoFile": ".delivery/.temp/promocode-subgraph.tsbuildinfo",
         "types": ["vite/client"],
         "paths": {
             "@src/*": ["./src/*"],

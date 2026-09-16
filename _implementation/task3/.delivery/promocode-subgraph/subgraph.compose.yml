@@ -1,0 +1,9 @@
+name: task3-impl
+
+services:
+  promocode-subgraph:
+    build:
+      context: ../..
+      dockerfile: .delivery/promocode-subgraph/Dockerfile
+    ports:
+      - "4003:4003"

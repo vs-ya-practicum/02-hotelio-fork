@@ -14,6 +14,7 @@
     "references": [
         { "path": "./services/booking-subgraph" },
         { "path": "./services/hotel-subgraph" },
-        { "path": "./services/gateway" }
+        { "path": "./services/gateway" },
+        { "path": "./services/promocode-subgraph" }
     ]
 }

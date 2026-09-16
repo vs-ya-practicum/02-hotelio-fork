@@ -15,6 +15,13 @@ services:
     ports:
       - "4002:4002"
 
+  promocode-subgraph:
+    build:
+      context: ..
+      dockerfile: .delivery/promocode-subgraph/Dockerfile
+    ports:
+      - "4003:4003"
+
   apollo-gateway:
     build:
       context: ..

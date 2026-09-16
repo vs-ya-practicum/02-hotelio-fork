@@ -8,7 +8,8 @@ export default defineConfig({
             include: [
                 'services/booking-subgraph/src/**/*.ts',
                 'services/hotel-subgraph/src/**/*.ts',
-                'services/gateway/src/**/*.ts'
+                'services/gateway/src/**/*.ts',
+                'services/promocode-subgraph/src/**/*.ts'
             ],
             reportsDirectory: '.testing/.coverage'
         },
@@ -16,7 +17,8 @@ export default defineConfig({
         projects: [
             'services/booking-subgraph/tests/foundation/.ancillary/config/vitest.config.ts',
             'services/hotel-subgraph/tests/foundation/.ancillary/config/vitest.config.ts',
-            'services/gateway/tests/foundation/.ancillary/config/vitest.config.ts'
+            'services/gateway/tests/foundation/.ancillary/config/vitest.config.ts',
+            'services/promocode-subgraph/tests/foundation/.ancillary/config/vitest.config.ts'
         ]
     }
 });
