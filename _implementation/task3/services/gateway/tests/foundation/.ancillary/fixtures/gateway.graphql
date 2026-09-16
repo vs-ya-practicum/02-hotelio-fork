@@ -8,5 +8,14 @@ query GetBookingsWithHotels($userId: String!) {
             city
             stars
         }
+        discountPercent
+        discountInfo {
+            isValid
+            originalDiscount
+            finalDiscount
+            description
+            expiresAt
+            applicableHotels
+        }
     }
 }

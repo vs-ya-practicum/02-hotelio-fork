@@ -12,6 +12,15 @@ export const gatewayE2E = {
                     name: 'Hotel Ocean',
                     city: 'Sochi',
                     stars: 4
+                },
+                discountPercent: 25,
+                discountInfo: {
+                    isValid: true,
+                    originalDiscount: 20,
+                    finalDiscount: 25,
+                    description: 'Summer promotion',
+                    expiresAt: '2099-12-31',
+                    applicableHotels: ['h1']
                 }
             }
         ]
