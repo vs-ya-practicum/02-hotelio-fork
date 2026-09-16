@@ -3,10 +3,10 @@ FROM node:20
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-COPY booking-subgraph/package.json ./booking-subgraph/
+COPY services/booking-subgraph/package.json ./services/booking-subgraph/
 RUN npm install
 
 COPY . .
 RUN npm run build --workspace booking-subgraph
 
-CMD ["node", "booking-subgraph/.delivery/.builds/dist/src/index.js"]
+CMD ["node", "services/booking-subgraph/.delivery/.builds/dist/src/index.js"]

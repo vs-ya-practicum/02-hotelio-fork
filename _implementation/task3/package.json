@@ -3,15 +3,14 @@
     "private": true,
     "type": "module",
     "workspaces": [
-        "*-subgraph",
-        "gateway"
+        "services/*"
     ],
     "scripts": {
         "build": "tsc",
         "booking:compose:up": "docker compose -f .delivery/booking-subgraph/subgraph.compose.yml up --build",
-        "booking:compose:build": "docker compose -f booking-subgraph/.delivery/booking-subgraph.compose.yml build --no-cache booking-service",
+        "booking:compose:build": "docker compose -f .delivery/booking-subgraph/subgraph.compose.yml build --no-cache booking-subgraph",
         "booking:compose:run": "npm run booking:compose:build && npm run booking:compose:up",
-        "booking:compose:down": "docker compose -f booking-subgraph/.delivery/booking-subgraph.compose.yml down",
+        "booking:compose:down": "docker compose -f .delivery/booking-subgraph/subgraph.compose.yml down",
         "test": "vitest run --config .testing/vitest.workspace.ts",
         "lint": "eslint .",
         "check-types": "npx tsc --noEmit"

@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { configDefaults, defineProject } from 'vitest/config';
 
-import _excluded from '../../../../../.testing/excluded.workspace.js';
+import _excluded from '../../../../../../.testing/excluded.workspace.js';
 
 const configurationDirectory = dirname(fileURLToPath(import.meta.url));
 const packageRoot = resolve(configurationDirectory, '../../../..');

@@ -9,6 +9,6 @@
   },
   "files": [],
   "references": [
-    { "path": "./booking-subgraph" }
+    { "path": "./services/booking-subgraph" }
   ]
 }

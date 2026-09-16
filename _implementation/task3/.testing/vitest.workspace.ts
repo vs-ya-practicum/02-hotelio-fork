@@ -4,7 +4,7 @@ export default defineConfig({
     test: {
         reporters: ['tree'],
         projects: [
-            'booking-subgraph/tests/foundation/.ancillary/config/vitest.config.ts'
+            'services/booking-subgraph/tests/foundation/.ancillary/config/vitest.config.ts'
         ]
     }
 });
