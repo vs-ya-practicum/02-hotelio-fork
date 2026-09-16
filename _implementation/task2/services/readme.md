@@ -16,7 +16,7 @@ docker compose up -d --build
 Then start each microservice from its directory:
 
 ```powershell
-cd hotelio-fork/services/booking
+cd hotelio-fork/_implementation/task2/services/booking
 npm run service:compose:run
 
 cd ../booking-history
@@ -36,11 +36,11 @@ docker network create hotelio-net 2>/dev/null || true
 docker compose up -d --build
 
 # Terminal 2: booking-service and its PostgreSQL database.
-cd hotelio-fork/services/booking
+cd hotelio-fork/_implementation/task2/services/booking
 npm run service:compose:run
 
 # Terminal 3: booking-history-service and its PostgreSQL database.
-cd hotelio-fork/services/booking-history
+cd hotelio-fork/_implementation/task2/services/booking-history
 npm run service:compose:run
 ```
 
