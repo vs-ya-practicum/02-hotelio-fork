@@ -4,7 +4,7 @@
     "type": "module",
     "scripts": {
         "check-types": "tsc --noEmit",
-        "build": "tsc"
+        "build": "tsc --build --force"
     },
     "dependencies": {
         "@apollo/gateway": "^2.4.0",
