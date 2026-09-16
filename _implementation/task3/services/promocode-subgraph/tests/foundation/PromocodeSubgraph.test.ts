@@ -1,8 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
 import activePromoCodesQuery from '@fixtures/activePromoCodes.graphql?raw';
+import bookingDiscountInfoQuery from '@fixtures/bookingDiscountInfo.graphql?raw';
 import validatePromoCodeQuery from '@fixtures/validatePromoCode.graphql?raw';
-import { activePromoCodesFixture, validatePromoCodeFixture } from '@fixtures/index.js';
+import {
+    activePromoCodesFixture,
+    bookingDiscountInfoFixture,
+    validatePromoCodeFixture
+} from '@fixtures/index.js';
 import { createPromocodeSubgraphServer } from '@src/subgraph.js';
 
 describe('[unit] PromocodeSubgraph Test', () => {
@@ -42,6 +47,20 @@ describe('[unit] PromocodeSubgraph Test', () => {
 
         if (actual.body.kind === 'single') {
             expect(actual.body.singleResult.data).toEqual(activePromoCodesFixture.expectedResponseData);
+        }
+    });
+
+    it('+Booking.discountInfo(): Should resolve the current discount from a Booking entity', async () => {
+        const server = createPromocodeSubgraphServer();
+        const actual = await server.executeOperation({
+            query: bookingDiscountInfoQuery,
+            variables: bookingDiscountInfoFixture.variables
+        });
+
+        expect(actual.body.kind).toEqual('single');
+
+        if (actual.body.kind === 'single') {
+            expect(actual.body.singleResult.data).toEqual(bookingDiscountInfoFixture.expectedResponseData);
         }
     });
 });

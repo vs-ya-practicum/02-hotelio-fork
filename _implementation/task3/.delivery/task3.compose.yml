@@ -29,5 +29,6 @@ services:
     depends_on:
       - booking-subgraph
       - hotel-subgraph
+      - promocode-subgraph
     ports:
       - "4000:4000"

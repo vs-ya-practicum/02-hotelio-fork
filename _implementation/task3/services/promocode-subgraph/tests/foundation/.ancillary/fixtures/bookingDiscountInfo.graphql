@@ -1,0 +1,15 @@
+query BookingDiscountInfo($representations: [_Any!]!) {
+    _entities(representations: $representations) {
+        ... on Booking {
+            discountPercent
+            discountInfo {
+                isValid
+                originalDiscount
+                finalDiscount
+                description
+                expiresAt
+                applicableHotels
+            }
+        }
+    }
+}

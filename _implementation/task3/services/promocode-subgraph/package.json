@@ -4,7 +4,7 @@
     "type": "module",
     "scripts": {
         "check-types": "tsc --noEmit",
-        "build": "tsc && node .delivery/scripts/copy-schema.mjs",
+        "build": "tsc --build --force && node .delivery/scripts/copy-schema.mjs",
         "test:foundation": "vitest run --config tests/foundation/.ancillary/config/vitest.config.ts"
     },
     "dependencies": {
