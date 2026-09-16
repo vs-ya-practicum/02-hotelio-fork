@@ -1,13 +1,15 @@
 {
-  "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "esModuleInterop": true,
-    "rootDir": ".",
-    "outDir": "dist",
-    "strict": false,
-    "skipLibCheck": true
-  },
-  "include": ["index.ts"]
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "composite": true,
+        "rootDir": ".",
+        "outDir": ".delivery/.builds/dist",
+        "tsBuildInfoFile": ".delivery/.temp/booking-subgraph.tsbuildinfo",
+        "paths": {
+            "@src/*": ["./src/*"],
+            "@tests/*": ["./tests/*"],
+            "@fixtures/*": ["./tests/foundation/.ancillary/fixtures/*"]
+        }
+    },
+    "include": ["index.ts"]
 }

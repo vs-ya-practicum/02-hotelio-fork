@@ -5,9 +5,16 @@
         "booking-subgraph"
     ],
     "scripts": {
-        "check-types": "npx tsc --noEmit",
         "build": "tsc",
-        "compose:booking:up": "docker compose -f booking-subgraph/.delivery/booking-subgraph.compose.yml up --build"
+        "booking:compose:up": "docker compose -f .delivery/booking-subgraph/subgraph.compose.yml up --build",
+        "booking:compose:build": "docker compose -f booking-subgraph/.delivery/booking-subgraph.compose.yml build --no-cache booking-service",
+        "booking:compose:run": "npm run booking:compose:build && npm run booking:compose:up",
+        "booking:compose:down": "docker compose -f booking-subgraph/.delivery/booking-subgraph.compose.yml down",
+        "test:foundation": "npm run vitest",
+        "test:e2e": "npx cross-env TEST_INCLUDE=e2e npm run vitest",
+        "vitest": "dotenvx run --env-file test.env -- vitest run --config tests/foundation/.ancillary/config/vitest.config.ts",
+        "lint": "eslint .",
+        "check-types": "npx tsc --noEmit"
     },
     "devDependencies": {
         "typescript": "^5.7.3"
