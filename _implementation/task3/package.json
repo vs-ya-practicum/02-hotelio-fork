@@ -11,7 +11,7 @@
         "booking:compose:build": "docker compose -f .delivery/booking-subgraph/subgraph.compose.yml build --no-cache booking-subgraph",
         "booking:compose:run": "npm run booking:compose:build && npm run booking:compose:up",
         "booking:compose:down": "docker compose -f .delivery/booking-subgraph/subgraph.compose.yml down",
-        "test": "vitest run --config .testing/vitest.workspace.ts",
+        "test:foundation": "vitest run --config .testing/vitest.workspace.ts --project booking-subgraph",
         "test:e2e": "vitest run --config .testing/vitest.workspace.ts --project booking-subgraph-e2e",
         "lint": "eslint .",
         "check-types": "npx tsc --noEmit"

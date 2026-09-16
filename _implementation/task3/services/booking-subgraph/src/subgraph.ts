@@ -1,34 +1,16 @@
 import { ApolloServer } from '@apollo/server';
 import { buildSubgraphSchema } from '@apollo/subgraph';
-import { gql } from 'graphql-tag';
+import { mergeTypeDefs } from '@graphql-tools/merge';
+import { loadFilesSync } from '@graphql-tools/load-files';
+import { fileURLToPath } from 'node:url';
 
-const typeDefs = gql`
-  type Booking @key(fields: "id") {
-    id: ID!
-    userId: String!
-    hotelId: String!
-    promoCode: String
-    discountPercent: Int
-  }
+import { bookingResolvers } from './resolvers/booking.resolvers.js';
 
-  type Query {
-    bookingsByUser(userId: String!): [Booking]
-  }
-`;
-
-const resolvers = {
-    Query: {
-        bookingsByUser: async (_, { userId }, { req }) => {
-            // TODO: Реальный вызов к grpc booking-сервису или заглушка + ACL
-        }
-    },
-    Booking: {
-        // TODO: Реальный вызов к grpc booking-сервису или заглушка + ACL
-    }
-};
+const schemaDirectory = fileURLToPath(new URL('./schema/', import.meta.url));
+const typeDefs = mergeTypeDefs(loadFilesSync(schemaDirectory, { extensions: ['graphql'] }));
 
 export function createBookingSubgraphServer() {
     return new ApolloServer({
-        schema: buildSubgraphSchema([{ typeDefs, resolvers }])
+        schema: buildSubgraphSchema([{ typeDefs, resolvers: bookingResolvers }])
     });
 }
