@@ -1,0 +1,8 @@
+query GetHotelsByIds($ids: [ID!]!) {
+    hotelsByIds(ids: $ids) {
+        id
+        name
+        city
+        stars
+    }
+}

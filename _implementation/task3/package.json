@@ -20,7 +20,7 @@
         "task3:compose:run": "npm run task3:compose:build && npm run task3:compose:up",
         "task3:compose:down": "docker compose -f .delivery/task3.compose.yml down",
         "test:foundation": "vitest run --config .testing/vitest.workspace.ts --project booking-subgraph --project hotel-subgraph",
-        "test:e2e": "vitest run --config .testing/vitest.workspace.ts --project booking-subgraph-e2e --project hotel-subgraph-e2e",
+        "test:e2e": "npx cross-env TEST_INCLUDE=e2e vitest run --config .testing/vitest.workspace.ts --project booking-subgraph --project hotel-subgraph",
         "lint": "eslint .",
         "check-types": "npx tsc --noEmit"
     },

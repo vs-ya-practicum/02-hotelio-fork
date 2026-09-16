@@ -1,14 +1,4 @@
 export const hotelsByIdsFixture = {
-    query: `
-        query GetHotelsByIds($ids: [ID!]!) {
-            hotelsByIds(ids: $ids) {
-                id
-                name
-                city
-                stars
-            }
-        }
-    `,
     variables: { ids: ['h1'] },
     expectedResponseData: {
         hotelsByIds: [
@@ -20,10 +10,4 @@ export const hotelsByIdsFixture = {
             }
         ]
     }
-} as const;
-
-export const hotelSubgraphE2E = {
-    endpoint: 'http://localhost:4002/',
-    query: '{ __typename }',
-    expectedResponseData: { __typename: 'Query' }
 } as const;

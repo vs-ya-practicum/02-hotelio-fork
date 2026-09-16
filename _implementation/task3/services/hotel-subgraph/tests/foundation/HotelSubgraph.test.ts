@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import hotelsByIdsQuery from '@fixtures/hotelsByIds.graphql?raw';
 import { hotelsByIdsFixture } from '@fixtures';
 import { createHotelSubgraphServer } from '@src/subgraph';
 
@@ -19,7 +20,7 @@ describe('[unit] HotelSubgraph Test', () => {
     it('+hotelsByIds(): Should return hotel descriptions for requested identifiers', async () => {
         const server = createHotelSubgraphServer();
         const actual = await server.executeOperation({
-            query: hotelsByIdsFixture.query,
+            query: hotelsByIdsQuery,
             variables: hotelsByIdsFixture.variables
         });
 
