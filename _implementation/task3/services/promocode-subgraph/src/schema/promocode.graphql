@@ -1,0 +1,18 @@
+extend type Booking @key(fields: "id") {
+    id: ID! @external
+    promoCode: String @external
+}
+
+type DiscountInfo {
+    isValid: Boolean!
+    originalDiscount: Float!
+    finalDiscount: Float!
+    description: String
+    expiresAt: String
+    applicableHotels: [ID!]!
+}
+
+type Query {
+    validatePromoCode(code: String!, hotelId: ID): DiscountInfo!
+    activePromoCodes: [DiscountInfo!]!
+}
