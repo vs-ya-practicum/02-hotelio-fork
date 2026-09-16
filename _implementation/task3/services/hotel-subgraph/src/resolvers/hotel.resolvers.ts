@@ -1,27 +1,18 @@
-const hotels = [
-    {
-        id: 'h1',
-        name: 'Hotel Ocean',
-        city: 'Sochi',
-        stars: 4
-    },
-    {
-        id: 'h2',
-        name: 'Hotel Forest',
-        city: 'Moscow',
-        stars: 5
-    }
-];
+import type { HotelSubgraphContext } from '../context.js';
 
 export const hotelResolvers = {
     Hotel: {
-        __resolveReference: ({ id }: { id: string }) => {
-            return hotels.find((hotel) => hotel.id === id);
+        __resolveReference({ id }: { id: string }, context: HotelSubgraphContext) {
+            return context.hotelLoader.load(id);
         }
     },
     Query: {
-        hotelsByIds: (_parent: unknown, { ids }: { ids: string[] }) => {
-            return hotels.filter((hotel) => ids.includes(hotel.id));
+        hotelsByIds(
+            _parent: unknown,
+            { ids }: { ids: string[] },
+            context: HotelSubgraphContext
+        ) {
+            return Promise.all(ids.map((id) => context.hotelLoader.load(id)));
         }
     }
 };
