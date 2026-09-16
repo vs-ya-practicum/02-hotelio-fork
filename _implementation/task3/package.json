@@ -1,0 +1,15 @@
+{
+    "name": "task3-implementation",
+    "private": true,
+    "workspaces": [
+        "booking-subgraph"
+    ],
+    "scripts": {
+        "check-types": "npx tsc --noEmit",
+        "build": "tsc",
+        "compose:booking:up": "docker compose -f booking-subgraph/.delivery/booking-subgraph.compose.yml up --build"
+    },
+    "devDependencies": {
+        "typescript": "^5.7.3"
+    }
+}

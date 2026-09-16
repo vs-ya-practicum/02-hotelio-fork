@@ -3,7 +3,7 @@ name: task3-impl
 services:
   booking-subgraph:
     build:
-      context: ..
-      dockerfile: .delivery/Dockerfile
+      context: ../..
+      dockerfile: .delivery/booking-subgraph/Dockerfile
     ports:
       - "4001:4001"
