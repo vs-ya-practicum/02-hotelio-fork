@@ -1,0 +1,12 @@
+query GetBookingsWithHotels($userId: String!) {
+    bookingsByUser(userId: $userId) {
+        id
+        hotelId
+        hotel {
+            id
+            name
+            city
+            stars
+        }
+    }
+}
