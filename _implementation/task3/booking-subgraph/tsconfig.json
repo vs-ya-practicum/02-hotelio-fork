@@ -11,5 +11,5 @@
             "@fixtures/*": ["./tests/foundation/.ancillary/fixtures/*"]
         }
     },
-    "include": ["index.ts"]
+    "include": ["src/**/*.ts"]
 }

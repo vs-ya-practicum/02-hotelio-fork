@@ -1,8 +1,10 @@
 {
     "name": "task3-implementation",
     "private": true,
+    "type": "module",
     "workspaces": [
-        "booking-subgraph"
+        "*-subgraph",
+        "gateway"
     ],
     "scripts": {
         "build": "tsc",
@@ -10,17 +12,17 @@
         "booking:compose:build": "docker compose -f booking-subgraph/.delivery/booking-subgraph.compose.yml build --no-cache booking-service",
         "booking:compose:run": "npm run booking:compose:build && npm run booking:compose:up",
         "booking:compose:down": "docker compose -f booking-subgraph/.delivery/booking-subgraph.compose.yml down",
-        "test:foundation": "npm run vitest",
-        "test:e2e": "npx cross-env TEST_INCLUDE=e2e npm run vitest",
-        "vitest": "dotenvx run --env-file test.env -- vitest run --config tests/foundation/.ancillary/config/vitest.config.ts",
+        "test": "vitest run --config .testing/vitest.workspace.ts",
         "lint": "eslint .",
         "check-types": "npx tsc --noEmit"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
+        "@vitest/coverage-v8": "^4.1.11",
         "eslint": "^10.10.0",
         "prettier": "^3.9.6",
         "typescript": "^5.7.3",
-        "typescript-eslint": "^8.70.0"
+        "typescript-eslint": "^8.70.0",
+        "vitest": "^4.1.11"
     }
 }

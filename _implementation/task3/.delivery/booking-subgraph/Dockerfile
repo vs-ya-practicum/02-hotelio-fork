@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:20
 
 WORKDIR /app
 
@@ -9,4 +9,4 @@ RUN npm install
 COPY . .
 RUN npm run build --workspace booking-subgraph
 
-CMD ["node", "booking-subgraph/.delivery/.builds/dist/index.js"]
+CMD ["node", "booking-subgraph/.delivery/.builds/dist/src/index.js"]

@@ -4,7 +4,8 @@
     "type": "module",
     "scripts": {
         "check-types": "npx tsc --noEmit",
-        "build": "tsc"
+        "build": "tsc",
+        "test:foundation": "vitest run --config tests/foundation/.ancillary/config/vitest.config.ts"
     },
     "dependencies": {
         "@apollo/server": "^4.8.1",
