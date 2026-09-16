@@ -4,6 +4,11 @@ type Booking @key(fields: "id") {
     hotelId: String!
     promoCode: String
     discountPercent: Int
+    hotel: Hotel
+}
+
+extend type Hotel @key(fields: "id") {
+    id: ID! @external
 }
 
 type Query {

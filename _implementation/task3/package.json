@@ -22,7 +22,7 @@
         "test:foundation": "vitest run --config .testing/vitest.workspace.ts --project booking-subgraph --project hotel-subgraph",
         "test:e2e": "npx cross-env TEST_INCLUDE=e2e vitest run --config .testing/vitest.workspace.ts --project booking-subgraph --project hotel-subgraph",
         "lint": "eslint .",
-        "check-types": "tsc --noEmit && npm run check-types --workspace booking-subgraph && npm run check-types --workspace hotel-subgraph"
+        "check-types": "tsc --noEmit && npm run check-types --workspace booking-subgraph && npm run check-types --workspace hotel-subgraph && npm run check-types --workspace apollo-gateway"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import bookingsByUserQuery from '@fixtures/bookingsByUser.graphql?raw';
 import { bookingsByUserFixture, bookingSubgraphE2E } from '@fixtures/index.js';
 
 describe('[e2e] BookingSubgraph Test', () => {
@@ -21,7 +22,7 @@ describe('[e2e] BookingSubgraph Test', () => {
             method: 'POST',
             headers: bookingsByUserFixture.authorizedRequestHeaders,
             body: JSON.stringify({
-                query: bookingsByUserFixture.query,
+                query: bookingsByUserQuery,
                 variables: bookingsByUserFixture.variables
             })
         });

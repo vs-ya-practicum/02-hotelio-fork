@@ -11,8 +11,9 @@
     ".testing/**/*.ts",
     "services/*/tests/foundation/.ancillary/config/**/*.ts"
   ],
-  "references": [
+    "references": [
         { "path": "./services/booking-subgraph" },
-        { "path": "./services/hotel-subgraph" }
+        { "path": "./services/hotel-subgraph" },
+        { "path": "./services/gateway" }
     ]
 }

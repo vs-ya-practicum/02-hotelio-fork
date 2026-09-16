@@ -1,0 +1,17 @@
+{
+    "name": "apollo-gateway",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "check-types": "tsc --noEmit",
+        "build": "tsc"
+    },
+    "dependencies": {
+        "@apollo/gateway": "^2.4.0",
+        "@apollo/server": "^4.8.1",
+        "graphql": "^16.8.1"
+    },
+    "devDependencies": {
+        "typescript": "^5.7.3"
+    }
+}

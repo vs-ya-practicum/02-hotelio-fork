@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
+import hotelByReferenceQuery from '@fixtures/hotelByReference.graphql?raw';
 import hotelsByIdsQuery from '@fixtures/hotelsByIds.graphql?raw';
-import { hotelsByIdsFixture } from '@fixtures/index.js';
+import { hotelByReferenceFixture, hotelsByIdsFixture } from '@fixtures/index.js';
 import { createHotelSubgraphServer } from '@src/subgraph.js';
 
 describe('[unit] HotelSubgraph Test', () => {
@@ -28,6 +29,20 @@ describe('[unit] HotelSubgraph Test', () => {
 
         if (actual.body.kind === 'single') {
             expect(actual.body.singleResult.data).toEqual(hotelsByIdsFixture.expectedResponseData);
+        }
+    });
+
+    it('+Hotel.__resolveReference(): Should return a hotel description for its entity reference', async () => {
+        const server = createHotelSubgraphServer();
+        const actual = await server.executeOperation({
+            query: hotelByReferenceQuery,
+            variables: hotelByReferenceFixture.variables
+        });
+
+        expect(actual.body.kind).toEqual('single');
+
+        if (actual.body.kind === 'single') {
+            expect(actual.body.singleResult.data).toEqual(hotelByReferenceFixture.expectedResponseData);
         }
     });
 });

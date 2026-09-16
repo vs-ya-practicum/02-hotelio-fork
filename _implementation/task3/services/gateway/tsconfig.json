@@ -1,0 +1,11 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "composite": true,
+        "rootDir": ".",
+        "outDir": ".delivery/.builds/dist",
+        "tsBuildInfoFile": ".delivery/.temp/gateway.tsbuildinfo"
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": [".delivery/.builds/**", ".delivery/.temp/**"]
+}

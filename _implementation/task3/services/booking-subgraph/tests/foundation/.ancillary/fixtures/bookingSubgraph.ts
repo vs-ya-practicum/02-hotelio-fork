@@ -5,17 +5,6 @@ export const bookingSubgraphE2E = {
 } as const;
 
 export const bookingsByUserFixture = {
-    query: `
-        query GetBookingsByUser($userId: String!) {
-            bookingsByUser(userId: $userId) {
-                id
-                userId
-                hotelId
-                promoCode
-                discountPercent
-            }
-        }
-    `,
     variables: { userId: 'user1' },
     authorizedRequestHeaders: { 'content-type': 'application/json', userid: 'user1' },
     authorizedContextValue: { req: { headers: { userid: 'user1' } } },
@@ -28,7 +17,10 @@ export const bookingsByUserFixture = {
                 userId: 'user1',
                 hotelId: 'h1',
                 promoCode: 'SUMMER',
-                discountPercent: 20
+                discountPercent: 20,
+                hotel: {
+                    id: 'h1'
+                }
             }
         ]
     },

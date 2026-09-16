@@ -1,1 +1,1 @@
-export { hotelsByIdsFixture } from './hotelSubgraph.js';
+export { hotelByReferenceFixture, hotelsByIdsFixture } from './hotelSubgraph.js';

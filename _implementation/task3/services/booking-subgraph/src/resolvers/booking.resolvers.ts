@@ -9,6 +9,11 @@ const bookings = [
 ];
 
 export const bookingResolvers = {
+    Booking: {
+        hotel: ({ hotelId }: { hotelId: string }) => {
+            return { __typename: 'Hotel', id: hotelId };
+        }
+    },
     Query: {
         bookingsByUser: (_parent: unknown, { userId }: { userId: string }, { req }) => {
             const requesterId = req.headers['userid'];

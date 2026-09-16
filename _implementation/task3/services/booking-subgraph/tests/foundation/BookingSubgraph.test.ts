@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import bookingsByUserQuery from '@fixtures/bookingsByUser.graphql?raw';
 import { bookingsByUserFixture } from '@fixtures/index.js';
 import { createBookingSubgraphServer } from '@src/subgraph.js';
 
@@ -19,7 +20,7 @@ describe('[unit] BookingSubgraph Test', () => {
     it('+bookingsByUser(): Should return bookings for user1', async () => {
         const server = createBookingSubgraphServer();
         const actual = await server.executeOperation({
-            query: bookingsByUserFixture.query,
+            query: bookingsByUserQuery,
             variables: bookingsByUserFixture.variables
         }, { contextValue: bookingsByUserFixture.authorizedContextValue });
 
@@ -33,7 +34,7 @@ describe('[unit] BookingSubgraph Test', () => {
     it('+bookingsByUser(): Should return no bookings for a different user', async () => {
         const server = createBookingSubgraphServer();
         const actual = await server.executeOperation({
-            query: bookingsByUserFixture.query,
+            query: bookingsByUserQuery,
             variables: bookingsByUserFixture.variables
         }, { contextValue: bookingsByUserFixture.unauthorizedContextValue });
 
@@ -47,7 +48,7 @@ describe('[unit] BookingSubgraph Test', () => {
     it('+bookingsByUser(): Should return no bookings without user identity', async () => {
         const server = createBookingSubgraphServer();
         const actual = await server.executeOperation({
-            query: bookingsByUserFixture.query,
+            query: bookingsByUserQuery,
             variables: bookingsByUserFixture.variables
         }, { contextValue: bookingsByUserFixture.unauthenticatedContextValue });
 

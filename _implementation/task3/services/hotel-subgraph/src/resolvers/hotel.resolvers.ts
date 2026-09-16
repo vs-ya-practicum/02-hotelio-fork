@@ -14,6 +14,11 @@ const hotels = [
 ];
 
 export const hotelResolvers = {
+    Hotel: {
+        __resolveReference: ({ id }: { id: string }) => {
+            return hotels.find((hotel) => hotel.id === id);
+        }
+    },
     Query: {
         hotelsByIds: (_parent: unknown, { ids }: { ids: string[] }) => {
             return hotels.filter((hotel) => ids.includes(hotel.id));
