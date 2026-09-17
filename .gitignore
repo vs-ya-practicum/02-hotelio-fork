@@ -4,3 +4,6 @@ node_modules/
 coverage/
 .temp
 *.env
+_implementation/task4/kubectl
+_implementation/task4/kubectl.sha256
+_implementation/task4/minikube-linux-amd64

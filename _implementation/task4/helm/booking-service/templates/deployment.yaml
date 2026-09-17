@@ -1,9 +1,12 @@
 apiVersion: apps/v1
+
 kind: Deployment
+
 metadata:
   name: {{.Release.Name}}
   labels:
     app: {{.Release.Name}}
+
 spec:
   replicas: {{.Values.replicaCount}}
   selector:
@@ -17,14 +20,18 @@ spec:
       containers:
         - name: {{.Chart.Name}}
           image: '{{ .Values.image.name }}:{{ .Values.image.tag }}'
-          imagePullPolicy: Never
+          imagePullPolicy: {{.Values.image.pullPolicy}}
+          env: {{- toYaml .Values.env | nindent 12}}
+          resources: {{- toYaml .Values.resources | nindent 12}}
 
           ports:
             - containerPort: {{.Values.service.targetPort}}
+
           livenessProbe:
             httpGet:
               path: /ping
               port: 8080
+
           readinessProbe:
             httpGet:
               path: /ping
