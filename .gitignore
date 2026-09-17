@@ -1,1 +1,6 @@
 bin/
+node_modules/
+.coverage/
+coverage/
+.temp
+*.env
