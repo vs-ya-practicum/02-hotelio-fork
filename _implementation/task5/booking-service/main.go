@@ -10,8 +10,13 @@ import (
 func main() {
 	enableFeatureX := os.Getenv("ENABLE_FEATURE_X") == "true"
 
+	serviceVersion := os.Getenv("SERVICE_VERSION")
+	if serviceVersion == "" {
+		serviceVersion = "unknown"
+	}
+
 	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "pong")
+		fmt.Fprintf(w, "pong %s", serviceVersion)
 	})
 
 	http.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
@@ -22,8 +27,6 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	// TODO: Feature flag route
-	// if ENABLE_FEATURE_X=true, expose /feature
 	if enableFeatureX {
 		http.HandleFunc("/feature", func(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "Feature X is enabled!")
