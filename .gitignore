@@ -4,3 +4,4 @@ node_modules/
 coverage/
 .temp
 *.env
+istio-1.31.0/
