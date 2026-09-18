@@ -1,0 +1,8 @@
+[32m$ docker run -d --name booking-service-test -p 8080:8080 $IMAGE_NAME:$IMAGE_TAG[39m
+0b22dbbeb024e24f912b62a36b4123040b741950011a5161b405a71e8f951f32
+[32m$ curl --fail http://localhost:8080/ping[39m
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100     4  100     4    0     0   4761      0 --:--:-- --:--:-- --:--:--  4000
+pong<gclShellPromptPlaceholder> docker rm -f booking-service-test
+booking-service-test

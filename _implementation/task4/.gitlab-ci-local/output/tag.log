@@ -1,0 +1,1 @@
+[32m$ git tag "deploy-$(date +%Y%m%d%H%M%S)"[39m
