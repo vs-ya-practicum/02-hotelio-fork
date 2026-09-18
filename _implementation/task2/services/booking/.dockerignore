@@ -1,0 +1,7 @@
+node_modules
+dist
+.delivery/.builds
+.delivery/.temp
+.git
+.gitignore
+npm-debug.log*

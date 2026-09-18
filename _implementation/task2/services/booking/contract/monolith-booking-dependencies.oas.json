@@ -1,0 +1,196 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Monolith Booking Dependencies API Contract",
+        "version": "0.0.3",
+        "description": "Consumer contract for the monolith REST endpoints that booking-service uses to create a booking."
+    },
+    "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+    "servers": [
+        {
+            "url": "http://monolith:8080",
+            "description": "Monolith address in hotelio-net."
+        }
+    ],
+    "paths": {
+        "/api/users/{userId}/active": {
+            "get": {
+                "operationId": "isUserActive",
+                "summary": "Get user active state",
+                "tags": ["Users"],
+                "parameters": [{ "$ref": "#/components/parameters/UserId" }],
+                "responses": {
+                    "200": {
+                        "description": "User active state.",
+                        "content": { "application/json": { "schema": { "type": "boolean" } } }
+                    },
+                    "500": { "$ref": "#/components/responses/MonolithInternalServerError" }
+                }
+            }
+        },
+        "/api/users/{userId}/blacklisted": {
+            "get": {
+                "operationId": "isUserBlacklisted",
+                "summary": "Get user blacklist state",
+                "tags": ["Users"],
+                "parameters": [{ "$ref": "#/components/parameters/UserId" }],
+                "responses": {
+                    "200": {
+                        "description": "User blacklist state.",
+                        "content": { "application/json": { "schema": { "type": "boolean" } } }
+                    },
+                    "500": { "$ref": "#/components/responses/MonolithInternalServerError" }
+                }
+            }
+        },
+        "/api/users/{userId}/status": {
+            "get": {
+                "operationId": "getUserStatus",
+                "summary": "Get user status",
+                "tags": ["Users"],
+                "parameters": [{ "$ref": "#/components/parameters/UserId" }],
+                "responses": {
+                    "200": {
+                        "description": "User status.",
+                        "content": { "text/plain": { "schema": { "type": "string" } } }
+                    },
+                    "404": { "description": "User status is unavailable." },
+                    "500": { "$ref": "#/components/responses/MonolithInternalServerError" }
+                }
+            }
+        },
+        "/api/hotels/{hotelId}/operational": {
+            "get": {
+                "operationId": "isHotelOperational",
+                "summary": "Get hotel operational state",
+                "tags": ["Hotels"],
+                "parameters": [{ "$ref": "#/components/parameters/HotelId" }],
+                "responses": {
+                    "200": {
+                        "description": "Hotel operational state.",
+                        "content": { "application/json": { "schema": { "type": "boolean" } } }
+                    },
+                    "500": { "$ref": "#/components/responses/MonolithInternalServerError" }
+                }
+            }
+        },
+        "/api/hotels/{hotelId}/fully-booked": {
+            "get": {
+                "operationId": "isHotelFullyBooked",
+                "summary": "Get hotel fully-booked state",
+                "tags": ["Hotels"],
+                "parameters": [{ "$ref": "#/components/parameters/HotelId" }],
+                "responses": {
+                    "200": {
+                        "description": "Hotel fully-booked state.",
+                        "content": { "application/json": { "schema": { "type": "boolean" } } }
+                    },
+                    "500": { "$ref": "#/components/responses/MonolithInternalServerError" }
+                }
+            }
+        },
+        "/api/reviews/hotel/{hotelId}/trusted": {
+            "get": {
+                "operationId": "isHotelTrusted",
+                "summary": "Get hotel trusted state",
+                "tags": ["Reviews"],
+                "parameters": [{ "$ref": "#/components/parameters/HotelId" }],
+                "responses": {
+                    "200": {
+                        "description": "Hotel trusted state based on reviews.",
+                        "content": { "application/json": { "schema": { "type": "boolean" } } }
+                    },
+                    "500": { "$ref": "#/components/responses/MonolithInternalServerError" }
+                }
+            }
+        },
+        "/api/promos/validate": {
+            "post": {
+                "operationId": "validatePromo",
+                "summary": "Validate a promo code for a user",
+                "tags": ["Promos"],
+                "parameters": [
+                    { "$ref": "#/components/parameters/PromoCode" },
+                    { "$ref": "#/components/parameters/UserIdQuery" }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Valid promo code and its discount.",
+                        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PromoCodeResponseVO" } } }
+                    },
+                    "400": { "description": "Promo code is invalid or does not apply to the user." },
+                    "500": { "$ref": "#/components/responses/MonolithInternalServerError" }
+                }
+            }
+        }
+    },
+    "components": {
+        "responses": {
+            "MonolithInternalServerError": {
+                "description": "Unexpected monolith failure.",
+                "content": {
+                    "application/json": {
+                        "schema": { "$ref": "#/components/schemas/MonolithErrorResponseVO" }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "UserId": {
+                "name": "userId",
+                "in": "path",
+                "required": true,
+                "schema": { "type": "string" }
+            },
+            "UserIdQuery": {
+                "name": "userId",
+                "in": "query",
+                "required": true,
+                "schema": { "type": "string" }
+            },
+            "HotelId": {
+                "name": "hotelId",
+                "in": "path",
+                "required": true,
+                "schema": { "type": "string" }
+            },
+            "PromoCode": {
+                "name": "code",
+                "in": "query",
+                "required": true,
+                "schema": { "type": "string" }
+            }
+        },
+        "schemas": {
+            "MonolithErrorResponseVO": {
+                "title": "[Monolith] MonolithErrorResponseVO",
+                "x-display-name": "[Monolith] MonolithErrorResponseVO",
+                "type": "object",
+                "description": "Unexpected-error response returned by the monolith.",
+                "additionalProperties": false,
+                "required": ["timestamp", "status", "error", "path"],
+                "properties": {
+                    "timestamp": { "type": "string", "format": "date-time" },
+                    "status": { "type": "integer", "const": 500 },
+                    "error": { "type": "string" },
+                    "path": { "type": "string" }
+                }
+            },
+            "PromoCodeResponseVO": {
+                "title": "[Monolith] PromoCodeResponseVO",
+                "x-display-name": "[Monolith] PromoCodeResponseVO",
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["code", "discount", "vipOnly", "expired"],
+                "properties": {
+                    "code": { "type": "string" },
+                    "discount": { "type": "number" },
+                    "vipOnly": { "type": "boolean" },
+                    "expired": { "type": "boolean" },
+                    "validUntil": { "type": "string", "format": "date" },
+                    "description": { "type": "string" }
+                }
+            }
+        }
+    }
+}
