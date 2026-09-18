@@ -1,6 +1,6 @@
 # Задание 5. Управление трафиком с Istio
 
-Фактическая реализация находится в [hotelio-fork/_implementation/task5](../../_implementation/task5/). В ней находятся Helm-чарты, Istio-манифесты, Caddyfile и проверочные скрипты.
+Фактическая реализация находится в папке [_implementation/task5](../../_implementation/task5/). В ней находятся Helm-чарты, Istio-манифесты, Caddyfile и проверочные скрипты.
 
 ## Результаты
 
