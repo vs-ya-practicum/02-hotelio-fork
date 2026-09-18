@@ -1,0 +1,9 @@
+name: task3-impl
+
+services:
+  hotel-subgraph:
+    build:
+      context: ../..
+      dockerfile: .delivery/hotel-subgraph/Dockerfile
+    ports:
+      - "4002:4002"

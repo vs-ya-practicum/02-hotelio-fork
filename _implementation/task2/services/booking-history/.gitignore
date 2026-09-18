@@ -1,0 +1,29 @@
+# compiled output
+/dist
+/node_modules
+/build
+/.delivery/.temp
+/.delivery/dist
+coverage
+
+# logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# tests
+/coverage
+/.nyc_output
+
+# dotenv environment variable files
+.env
+test.env
+stage.env
+production.env
+
+# temp directory
+.temp
+.tmp

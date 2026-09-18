@@ -1,0 +1,71 @@
+@startuml Вынос HotelService в Задаче 1 Class
+
+title Вынос HotelService в Задаче 1 Class
+
+skinparam packageStyle rectangle
+
+note "См. ADR-001-task-1.ru.md\nдля плана выноса." as adrNote
+note "Blue/green:\napi.hotelio использует blue, пока\ngreen.monolith доступен только тестировщикам.\n\nCanary:\napi.hotelio постепенно распределяет\nтрафик между blue и green." as rolloutNote
+
+package "Устаревший production\nмонолит (blue)" {
+    class "blue.monolith" as blueMonolith <<Spring Boot>>
+
+    dataclass "База данных монолита" as monolithDb <<PostgreSQL>>
+}
+
+
+package "Управляемый Kubernetes (green)" {
+    package "Инфраструктура" {
+        class "Ingress управляемого Kubernetes" as ingress <<Ingress>>
+        class "API Gateway" as apiGateway <<Gateway>>
+        class KubernetesProbe <<Infrastructure>>
+        class GrafanaAlloy <<Telemetry collector>>
+    }
+
+    package "Production-монолит\nв Kubernetes (green)" {
+        class BookingService <<Service>>
+    }
+
+    package "Вынесенный HotelService" as ExtractedHotelService {
+        class HotelRESTAPI <<REST API>>
+        class HotelService <<Service>>
+        class HotelRepository <<Repository>>
+        class ActuatorHealthEndpoint <<Actuator>>
+        class JsonStructuredLogService <<Logging>>
+    }
+
+    dataclass "База данных отелей" as hotelDb <<PostgreSQL>>
+}
+
+class GrafanaCloud <<External system>>
+
+ingress --> apiGateway : маршрутизирует трафик
+apiGateway --> blueMonolith : основной маршрут до переключения на Kubernetes; затем только rollback
+note on link #0B3D91
+    <color:white>Blue: api.hotelio использует blue, пока%n()<color:white>green доступен только тестировщикам.%n()<color:white>После переключения на green blue остаётся%n()<color:white>только rollback для этого переключения.</color>
+end note
+apiGateway --> BookingService : маршрут тестировщиков green.monolith
+note on link #lightgreen
+    <color:black>Green: только тестировщики%n()<color:black>проверка blue/green.</color>
+end note
+apiGateway ..> BookingService : canary-трафик api.hotelio
+note on link #FFD700
+    Canary: api.hotelio постепенно%n()распределяет трафик на green.
+end note
+apiGateway --> HotelRESTAPI : /api/hotels после переключения
+KubernetesProbe --> ActuatorHealthEndpoint : проверяет готовность и работоспособность
+
+blueMonolith --> monolithDb : использует
+BookingService --> monolithDb : использует
+monolithDb --> hotelDb : копирует данные отелей перед переключением
+
+BookingService --> HotelRESTAPI : проверяет отель\nвнутренний HTTP/REST
+HotelRESTAPI --> HotelService : передаёт обработку
+HotelService --> HotelRepository : считывает данные отелей
+HotelRepository --> hotelDb : чтение
+HotelRESTAPI --> JsonStructuredLogService : записывает структурированные логи
+HotelService --> JsonStructuredLogService : записывает структурированные логи
+JsonStructuredLogService --> GrafanaAlloy : экспортирует логи
+GrafanaAlloy --> GrafanaCloud : экспортирует телеметрию
+
+@enduml

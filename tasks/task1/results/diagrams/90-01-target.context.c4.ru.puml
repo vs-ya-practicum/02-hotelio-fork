@@ -1,0 +1,24 @@
+@startuml Переход Hotelio к целевому состоянию System Context
+!NEW_C4_STYLE=1
+
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+SHOW_PERSON_OUTLINE()
+
+title Переход Hotelio к целевому состоянию System Context
+
+'LAYOUT_WITH_LEGEND()
+
+Person(user, "Пользователь", "Ищет и бронирует отели")
+Person(partner, "Партнёрский канал", "Использует API Hotelio")
+Person(operationsTeam, "Команда эксплуатации", "Использует дашборды и получает алерты")
+
+System(hotelio, "Hotelio", "Платформа бронирования отелей; сервисы из неё постепенно выделяются и могут развёртываться независимо")
+System_Ext(grafanaCloud, "Grafana Cloud", "Предоставляет управляемые метрики, логи, трассировку, дашборды и алерты")
+
+Rel(user, hotelio, "Использует публичные API", "HTTPS")
+Rel(partner, hotelio, "Использует публичные API", "HTTPS")
+Rel(hotelio, grafanaCloud, "Экспортирует метрики API Gateway и логи API Gateway и HotelService")
+Rel(operationsTeam, grafanaCloud, "Использует дашборды и получает алерты")
+
+@enduml

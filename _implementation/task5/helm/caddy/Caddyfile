@@ -1,0 +1,20 @@
+:80 {
+	@ping {
+		method GET
+		path /ping
+	}
+
+	handle @ping {
+		reverse_proxy booking-service-v1:80 booking-service-v2:80 {
+			lb_policy first
+			health_uri /healthz
+			lb_retries 1
+			lb_try_duration 5s
+
+			@v1_error status 500 502 503 504
+			handle_response @v1_error {
+				reverse_proxy booking-service-v2:80
+			}
+		}
+	}
+}

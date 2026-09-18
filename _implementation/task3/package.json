@@ -1,0 +1,40 @@
+{
+    "name": "task3-implementation",
+    "private": true,
+    "type": "module",
+    "workspaces": [
+        "services/*"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "booking:compose:up": "docker compose -f .delivery/booking-subgraph/subgraph.compose.yml up --build",
+        "booking:compose:build": "docker compose -f .delivery/booking-subgraph/subgraph.compose.yml build --no-cache booking-subgraph",
+        "booking:compose:run": "npm run booking:compose:build && npm run booking:compose:up",
+        "booking:compose:down": "docker compose -f .delivery/booking-subgraph/subgraph.compose.yml down",
+        "hotel:compose:up": "docker compose -f .delivery/hotel-subgraph/subgraph.compose.yml up --build",
+        "hotel:compose:build": "docker compose -f .delivery/hotel-subgraph/subgraph.compose.yml build --no-cache hotel-subgraph",
+        "hotel:compose:run": "npm run hotel:compose:build && npm run hotel:compose:up",
+        "hotel:compose:down": "docker compose -f .delivery/hotel-subgraph/subgraph.compose.yml down",
+        "promocode:compose:up": "docker compose -f .delivery/promocode-subgraph/subgraph.compose.yml up --build",
+        "promocode:compose:build": "docker compose -f .delivery/promocode-subgraph/subgraph.compose.yml build --no-cache promocode-subgraph",
+        "promocode:compose:run": "npm run promocode:compose:build && npm run promocode:compose:up",
+        "promocode:compose:down": "docker compose -f .delivery/promocode-subgraph/subgraph.compose.yml down",
+        "task3:compose:up": "docker compose -f .delivery/task3.compose.yml up --build",
+        "task3:compose:build": "docker compose -f .delivery/task3.compose.yml build --no-cache",
+        "task3:compose:run": "npm run task3:compose:build && npm run task3:compose:up",
+        "task3:compose:down": "docker compose -f .delivery/task3.compose.yml down",
+        "test:foundation": "vitest run --config .testing/vitest.workspace.ts --project booking-subgraph --project hotel-subgraph --project promocode-subgraph",
+        "test:e2e": "npx cross-env TEST_INCLUDE=e2e vitest run --config .testing/vitest.workspace.ts --project booking-subgraph --project hotel-subgraph --project apollo-gateway",
+        "lint": "eslint .",
+        "check-types": "tsc --noEmit && npm run check-types --workspace booking-subgraph && npm run check-types --workspace hotel-subgraph && npm run check-types --workspace apollo-gateway && npm run check-types --workspace promocode-subgraph"
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "@vitest/coverage-v8": "^4.1.11",
+        "eslint": "^10.10.0",
+        "prettier": "^3.9.6",
+        "typescript": "^5.7.3",
+        "typescript-eslint": "^8.70.0",
+        "vitest": "^4.1.11"
+    }
+}

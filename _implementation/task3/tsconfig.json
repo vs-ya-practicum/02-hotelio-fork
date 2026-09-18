@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "strict": false,
+    "skipLibCheck": true
+  },
+  "include": [
+    ".testing/**/*.ts",
+    "services/*/tests/foundation/.ancillary/config/**/*.ts"
+  ],
+    "references": [
+        { "path": "./services/booking-subgraph" },
+        { "path": "./services/hotel-subgraph" },
+        { "path": "./services/gateway" },
+        { "path": "./services/promocode-subgraph" }
+    ]
+}

@@ -1,0 +1,34 @@
+name: task3-impl
+
+services:
+  booking-subgraph:
+    build:
+      context: ..
+      dockerfile: .delivery/booking-subgraph/Dockerfile
+    ports:
+      - "4001:4001"
+
+  hotel-subgraph:
+    build:
+      context: ..
+      dockerfile: .delivery/hotel-subgraph/Dockerfile
+    ports:
+      - "4002:4002"
+
+  promocode-subgraph:
+    build:
+      context: ..
+      dockerfile: .delivery/promocode-subgraph/Dockerfile
+    ports:
+      - "4003:4003"
+
+  apollo-gateway:
+    build:
+      context: ..
+      dockerfile: .delivery/gateway/Dockerfile
+    depends_on:
+      - booking-subgraph
+      - hotel-subgraph
+      - promocode-subgraph
+    ports:
+      - "4000:4000"

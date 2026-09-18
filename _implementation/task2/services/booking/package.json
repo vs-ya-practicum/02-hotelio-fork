@@ -1,0 +1,40 @@
+{
+    "name": "booking",
+    "version": "0.0.3",
+    "description": "",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+        "dev": "tsx src/main.ts",
+        "service:compose:build": "docker compose -f .delivery/configuration/booking.compose.yml build --no-cache booking-service",
+        "service:compose:up": "docker compose -f .delivery/configuration/booking.compose.yml up",
+        "service:compose:run": "npm run service:compose:build && npm run service:compose:up",
+        "service:compose:down": "docker compose -f .delivery/configuration/booking.compose.yml down",
+        "test:foundation": "npm run vitest",
+        "test:e2e": "npx cross-env TEST_INCLUDE=e2e npm run vitest",
+        "vitest": "dotenvx run --env-file test.env -- vitest run --config tests/foundation/.ancillary/config/vitest.config.ts",
+        "lint": "eslint .",
+        "check-types": "npx tsc --noEmit"
+    },
+    "keywords": [],
+    "dependencies": {
+        "@dotenvx/dotenvx": "^2.25.0",
+        "@grpc/grpc-js": "^1.14.4",
+        "@grpc/proto-loader": "^0.8.1",
+        "kafkajs": "^2.2.4",
+        "pg": "^8.23.0",
+        "uuid": "^14.0.2"
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "@types/node": "^26.5.1",
+        "@types/pg": "^8.23.1",
+        "@vitest/coverage-v8": "^4.1.11",
+        "eslint": "^10.10.0",
+        "prettier": "^3.8.4",
+        "tsx": "^4.23.13",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.70.0",
+        "vitest": "^4.1.9"
+    }
+}

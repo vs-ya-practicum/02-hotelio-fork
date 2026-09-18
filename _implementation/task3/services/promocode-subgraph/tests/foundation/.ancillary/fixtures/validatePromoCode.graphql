@@ -1,0 +1,10 @@
+query ValidatePromoCode($code: String!, $hotelId: ID) {
+    validatePromoCode(code: $code, hotelId: $hotelId) {
+        isValid
+        originalDiscount
+        finalDiscount
+        description
+        expiresAt
+        applicableHotels
+    }
+}

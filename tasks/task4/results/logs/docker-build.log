@@ -1,0 +1,37 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 847B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/golang:1.21-alpine
+#2 DONE 1.2s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/5] FROM docker.io/library/golang:1.21-alpine@sha256:2414035b086e3c42b99654c8b26e6f5b1b1598080d65fd03c7f499552ff4dc94
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 29B done
+#5 DONE 0.0s
+
+#6 [2/5] RUN apk add --no-cache curl
+#6 CACHED
+
+#7 [4/5] COPY main.go .
+#7 CACHED
+
+#8 [3/5] WORKDIR /app
+#8 CACHED
+
+#9 [5/5] RUN go build -o booking-service main.go
+#9 CACHED
+
+#10 exporting to image
+#10 exporting layers done
+#10 writing image sha256:f6f4726309adf7dddfc0246fec1be3a7593b427fc6d17a2abf24ea80390fbeb9 done
+#10 naming to docker.io/library/booking-service:latest done
+#10 DONE 0.0s

@@ -1,0 +1,435 @@
+
+> task3:compose:run
+> npm run task3:compose:build && npm run task3:compose:up
+
+
+> task3:compose:build
+> docker compose -f .delivery/task3.compose.yml build --no-cache
+
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.06kB done
+#1 DONE 0.0s
+
+#2 [apollo-gateway internal] load build definition from Dockerfile
+#2 transferring dockerfile: 302B 0.0s done
+#2 DONE 0.0s
+
+#3 [booking-subgraph internal] load build definition from Dockerfile
+#3 transferring dockerfile: 331B done
+#3 DONE 0.0s
+
+#4 [promocode-subgraph internal] load build definition from Dockerfile
+#4 transferring dockerfile: 339B 0.0s done
+#4 DONE 0.0s
+
+#5 [hotel-subgraph internal] load build definition from Dockerfile
+#5 transferring dockerfile: 323B 0.0s done
+#5 DONE 0.0s
+
+#6 [hotel-subgraph internal] load metadata for docker.io/library/node:20
+#6 DONE 1.2s
+
+#7 [booking-subgraph internal] load .dockerignore
+#7 transferring context: 82B 0.0s done
+#7 DONE 0.0s
+
+#8 [promocode-subgraph 1/7] FROM docker.io/library/node:20@sha256:8f693eaa7e0a8e71560c9a82b55fd54c2ae920a2ba5d2cde28bac7d1c01c9ba5
+#8 DONE 0.0s
+
+#9 [hotel-subgraph 2/7] WORKDIR /app
+#9 CACHED
+
+#10 [hotel-subgraph internal] load build context
+#10 transferring context: 13.41kB 0.6s done
+#10 DONE 0.6s
+
+#11 [hotel-subgraph 3/7] COPY package.json package-lock.json ./
+#11 DONE 0.0s
+
+#12 [apollo-gateway 4/7] COPY services/gateway/package.json ./services/gateway/
+#12 DONE 0.1s
+
+#13 [booking-subgraph 4/7] COPY services/booking-subgraph/package.json ./services/booking-subgraph/
+#13 DONE 0.1s
+
+#14 [promocode-subgraph 4/7] COPY services/promocode-subgraph/package.json ./services/promocode-subgraph/
+#14 DONE 0.1s
+
+#15 [hotel-subgraph 4/7] COPY services/hotel-subgraph/package.json ./services/hotel-subgraph/
+#15 DONE 0.1s
+
+#16 [hotel-subgraph 5/7] RUN npm install
+#16 1.186 npm warn EBADENGINE Unsupported engine {
+#16 1.186 npm warn EBADENGINE   package: '@apollo/subgraph@2.15.1',
+#16 1.186 npm warn EBADENGINE   required: { node: '>=22.0.0' },
+#16 1.186 npm warn EBADENGINE   current: { node: 'v20.20.2', npm: '10.8.2' }
+#16 1.186 npm warn EBADENGINE }
+#16 2.958 npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+#16 9.121 npm warn deprecated @apollo/server@4.13.0: Apollo Server v4 is end-of-life since January 26, 2026. As long as you are already using a non-EOL version of Node.js, upgrading to v5 should take only a few minutes. See https://www.apollographql.com/docs/apollo-server/previous-versions for details.
+#16 9.179 npm warn deprecated @apollo/server-gateway-interface@1.1.1: @apollo/server-gateway-interface v1 is part of Apollo Server v4, which is deprecated and will transition to end-of-life on January 26, 2026. As long as you are already using a non-EOL version of Node.js, upgrading to v2 should take only a few minutes. See https://www.apollographql.com/docs/apollo-server/previous-versions for details.
+#16 ...
+
+#17 [apollo-gateway 5/7] RUN npm install
+#17 2.972 npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+#17 ...
+
+#18 [booking-subgraph 5/7] RUN npm install
+#18 1.166 npm warn EBADENGINE Unsupported engine {
+#18 1.166 npm warn EBADENGINE   package: '@apollo/subgraph@2.15.1',
+#18 1.166 npm warn EBADENGINE   required: { node: '>=22.0.0' },
+#18 1.166 npm warn EBADENGINE   current: { node: 'v20.20.2', npm: '10.8.2' }
+#18 1.166 npm warn EBADENGINE }
+#18 3.275 npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+#18 ...
+
+#19 [promocode-subgraph 5/7] RUN npm install
+#19 1.189 npm warn EBADENGINE Unsupported engine {
+#19 1.189 npm warn EBADENGINE   package: '@apollo/subgraph@2.15.1',
+#19 1.189 npm warn EBADENGINE   required: { node: '>=22.0.0' },
+#19 1.189 npm warn EBADENGINE   current: { node: 'v20.20.2', npm: '10.8.2' }
+#19 1.189 npm warn EBADENGINE }
+#19 6.784 npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+#19 9.463 npm warn deprecated @apollo/server-gateway-interface@1.1.1: @apollo/server-gateway-interface v1 is part of Apollo Server v4, which is deprecated and will transition to end-of-life on January 26, 2026. As long as you are already using a non-EOL version of Node.js, upgrading to v2 should take only a few minutes. See https://www.apollographql.com/docs/apollo-server/previous-versions for details.
+#19 10.09 npm warn deprecated @apollo/server@4.13.0: Apollo Server v4 is end-of-life since January 26, 2026. As long as you are already using a non-EOL version of Node.js, upgrading to v5 should take only a few minutes. See https://www.apollographql.com/docs/apollo-server/previous-versions for details.
+#19 ...
+
+#18 [booking-subgraph 5/7] RUN npm install
+#18 10.49 npm warn deprecated @apollo/server-gateway-interface@1.1.1: @apollo/server-gateway-interface v1 is part of Apollo Server v4, which is deprecated and will transition to end-of-life on January 26, 2026. As long as you are already using a non-EOL version of Node.js, upgrading to v2 should take only a few minutes. See https://www.apollographql.com/docs/apollo-server/previous-versions for details.
+#18 10.80 npm warn deprecated @apollo/server@4.13.0: Apollo Server v4 is end-of-life since January 26, 2026. As long as you are already using a non-EOL version of Node.js, upgrading to v5 should take only a few minutes. See https://www.apollographql.com/docs/apollo-server/previous-versions for details.
+#18 ...
+
+#19 [promocode-subgraph 5/7] RUN npm install
+#19 11.16 
+#19 11.16 added 344 packages, and audited 349 packages in 11s
+#19 11.16 
+#19 11.16 81 packages are looking for funding
+#19 11.16   run `npm fund` for details
+#19 11.16 
+#19 11.16 2 moderate severity vulnerabilities
+#19 11.16 
+#19 11.16 To address all issues (including breaking changes), run:
+#19 11.16   npm audit fix --force
+#19 11.16 
+#19 11.16 Run `npm audit` for details.
+#19 11.16 npm notice
+#19 11.16 npm notice New major version of npm available! 10.8.2 -> 12.0.2
+#19 11.16 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+#19 11.16 npm notice To update run: npm install -g npm@12.0.2
+#19 11.16 npm notice
+#19 DONE 11.8s
+
+#20 [promocode-subgraph 6/7] COPY . .
+#20 DONE 0.2s
+
+#17 [apollo-gateway 5/7] RUN npm install
+#17 10.79 npm warn deprecated @apollo/server-gateway-interface@1.1.1: @apollo/server-gateway-interface v1 is part of Apollo Server v4, which is deprecated and will transition to end-of-life on January 26, 2026. As long as you are already using a non-EOL version of Node.js, upgrading to v2 should take only a few minutes. See https://www.apollographql.com/docs/apollo-server/previous-versions for details.
+#17 11.81 npm warn deprecated @apollo/server@4.13.0: Apollo Server v4 is end-of-life since January 26, 2026. As long as you are already using a non-EOL version of Node.js, upgrading to v5 should take only a few minutes. See https://www.apollographql.com/docs/apollo-server/previous-versions for details.
+#17 12.99 
+#17 12.99 added 426 packages, and audited 431 packages in 12s
+#17 12.99 
+#17 12.99 115 packages are looking for funding
+#17 12.99   run `npm fund` for details
+#17 13.02 
+#17 13.02 19 moderate severity vulnerabilities
+#17 13.02 
+#17 13.02 To address issues that do not require attention, run:
+#17 13.02   npm audit fix
+#17 13.02 
+#17 13.02 To address all issues (including breaking changes), run:
+#17 13.02   npm audit fix --force
+#17 13.02 
+#17 13.02 Run `npm audit` for details.
+#17 13.03 npm notice
+#17 13.03 npm notice New major version of npm available! 10.8.2 -> 12.0.2
+#17 13.03 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+#17 13.03 npm notice To update run: npm install -g npm@12.0.2
+#17 13.03 npm notice
+#17 DONE 13.3s
+
+#21 [promocode-subgraph 7/7] RUN npm run build --workspace promocode-subgraph
+#21 0.380 
+#21 0.380 > promocode-subgraph@1.0.0 build
+#21 0.380 > tsc --build --force && node .delivery/scripts/copy-schema.mjs
+#21 0.380 
+#21 ...
+
+#22 [apollo-gateway 6/7] COPY . .
+#22 DONE 0.1s
+
+#16 [hotel-subgraph 5/7] RUN npm install
+#16 13.44 
+#16 13.44 added 345 packages, and audited 350 packages in 13s
+#16 13.44 
+#16 13.44 81 packages are looking for funding
+#16 13.44   run `npm fund` for details
+#16 13.45 
+#16 13.45 2 moderate severity vulnerabilities
+#16 13.45 
+#16 13.45 To address all issues (including breaking changes), run:
+#16 13.45   npm audit fix --force
+#16 13.45 
+#16 13.45 Run `npm audit` for details.
+#16 13.45 npm notice
+#16 13.45 npm notice New major version of npm available! 10.8.2 -> 12.0.2
+#16 13.45 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+#16 13.45 npm notice To update run: npm install -g npm@12.0.2
+#16 13.45 npm notice
+#16 DONE 13.5s
+
+#23 [apollo-gateway 7/7] RUN npm run build --workspace apollo-gateway
+#23 ...
+
+#18 [booking-subgraph 5/7] RUN npm install
+#18 13.57 
+#18 13.57 added 345 packages, and audited 350 packages in 13s
+#18 13.57 
+#18 13.57 81 packages are looking for funding
+#18 13.57   run `npm fund` for details
+#18 13.58 
+#18 13.58 2 moderate severity vulnerabilities
+#18 13.58 
+#18 13.58 To address all issues (including breaking changes), run:
+#18 13.58   npm audit fix --force
+#18 13.58 
+#18 13.58 Run `npm audit` for details.
+#18 13.58 npm notice
+#18 13.58 npm notice New major version of npm available! 10.8.2 -> 12.0.2
+#18 13.58 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+#18 13.58 npm notice To update run: npm install -g npm@12.0.2
+#18 13.58 npm notice
+#18 DONE 13.7s
+
+#24 [hotel-subgraph 6/7] COPY . .
+#24 DONE 0.2s
+
+#25 [booking-subgraph 6/7] COPY . .
+#25 DONE 0.1s
+
+#21 [promocode-subgraph 7/7] RUN npm run build --workspace promocode-subgraph
+#21 DONE 1.8s
+
+#26 [booking-subgraph 7/7] RUN npm run build --workspace booking-subgraph
+#26 0.816 
+#26 0.816 > booking-subgraph@1.0.0 build
+#26 0.816 > tsc --build --force && node .delivery/scripts/copy-schema.mjs
+#26 0.816 
+#26 ...
+
+#27 [promocode-subgraph] exporting to image
+#27 exporting layers 1.4s done
+#27 writing image sha256:3c1e5d4b41ce01056a764cdcc08bf2269498b5527e75d9c10efb472621c90d9e done
+#27 naming to docker.io/library/task3-impl-promocode-subgraph 0.0s done
+#27 DONE 1.4s
+
+#28 [promocode-subgraph] resolving provenance for metadata file
+#28 DONE 0.0s
+
+#29 [hotel-subgraph 7/7] RUN npm run build --workspace hotel-subgraph
+#29 0.862 
+#29 0.862 > hotel-subgraph@1.0.0 build
+#29 0.862 > tsc --build --force && node .delivery/scripts/copy-schema.mjs
+#29 0.862 
+#29 ...
+
+#23 [apollo-gateway 7/7] RUN npm run build --workspace apollo-gateway
+#23 0.833 
+#23 0.833 > apollo-gateway@1.0.0 build
+#23 0.833 > tsc --build --force
+#23 0.833 
+#23 DONE 2.4s
+
+#30 [apollo-gateway] exporting to image
+#30 ...
+
+#26 [booking-subgraph 7/7] RUN npm run build --workspace booking-subgraph
+#26 DONE 2.4s
+
+#29 [hotel-subgraph 7/7] RUN npm run build --workspace hotel-subgraph
+#29 DONE 2.6s
+
+#31 [hotel-subgraph] exporting to image
+#31 exporting layers 1.0s done
+#31 writing image sha256:5ea56f81e29a5693aba4706a5196931c63127289ce4aa7570ab63cab3089994d done
+#31 naming to docker.io/library/task3-impl-hotel-subgraph 0.0s done
+#31 DONE 1.0s
+
+#32 [booking-subgraph] exporting to image
+#32 exporting layers 1.0s done
+#32 writing image sha256:a2a822b5182031862301f5c18ec1a8b23229a2530757fa590ee4f5ed0d774be5 done
+#32 naming to docker.io/library/task3-impl-booking-subgraph done
+#32 DONE 1.1s
+
+#33 [booking-subgraph] resolving provenance for metadata file
+#33 DONE 0.0s
+
+#34 [hotel-subgraph] resolving provenance for metadata file
+#34 DONE 0.0s
+
+#30 [apollo-gateway] exporting to image
+#30 exporting layers 1.8s done
+#30 writing image sha256:11b6e2a7b2ef1db8224d659f215bc9723558e6ca6116be164c3a2f23e87c0fea done
+#30 naming to docker.io/library/task3-impl-apollo-gateway done
+#30 DONE 1.8s
+
+#35 [apollo-gateway] resolving provenance for metadata file
+#35 DONE 0.0s
+
+> task3:compose:up
+> docker compose -f .delivery/task3.compose.yml up --build
+
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.96kB done
+#1 DONE 0.0s
+
+#2 [apollo-gateway internal] load build definition from Dockerfile
+#2 DONE 0.0s
+
+#3 [promocode-subgraph internal] load build definition from Dockerfile
+#3 transferring dockerfile: 339B 0.0s done
+#3 DONE 0.0s
+
+#2 [apollo-gateway internal] load build definition from Dockerfile
+#2 transferring dockerfile: 302B done
+#2 DONE 0.0s
+
+#4 [hotel-subgraph internal] load build definition from Dockerfile
+#4 transferring dockerfile: 323B done
+#4 DONE 0.0s
+
+#5 [booking-subgraph internal] load build definition from Dockerfile
+#5 transferring dockerfile: 331B 0.0s done
+#5 DONE 0.0s
+
+#6 [booking-subgraph internal] load metadata for docker.io/library/node:20
+#6 DONE 0.2s
+
+#7 [booking-subgraph internal] load .dockerignore
+#7 transferring context: 82B 0.0s done
+#7 DONE 0.0s
+
+#8 [hotel-subgraph 1/7] FROM docker.io/library/node:20@sha256:8f693eaa7e0a8e71560c9a82b55fd54c2ae920a2ba5d2cde28bac7d1c01c9ba5
+#8 DONE 0.0s
+
+#9 [booking-subgraph internal] load build context
+#9 transferring context: 24.56kB 0.6s done
+#9 DONE 0.6s
+
+#10 [booking-subgraph 4/7] COPY services/booking-subgraph/package.json ./services/booking-subgraph/
+#10 CACHED
+
+#11 [hotel-subgraph 4/7] COPY services/hotel-subgraph/package.json ./services/hotel-subgraph/
+#11 CACHED
+
+#12 [hotel-subgraph 5/7] RUN npm install
+#12 CACHED
+
+#13 [booking-subgraph 5/7] RUN npm install
+#13 CACHED
+
+#14 [promocode-subgraph 4/7] COPY services/promocode-subgraph/package.json ./services/promocode-subgraph/
+#14 CACHED
+
+#15 [promocode-subgraph 5/7] RUN npm install
+#15 CACHED
+
+#16 [hotel-subgraph 2/7] WORKDIR /app
+#16 CACHED
+
+#17 [apollo-gateway 4/7] COPY services/gateway/package.json ./services/gateway/
+#17 CACHED
+
+#18 [hotel-subgraph 3/7] COPY package.json package-lock.json ./
+#18 CACHED
+
+#19 [apollo-gateway 5/7] RUN npm install
+#19 CACHED
+
+#20 [booking-subgraph 6/7] COPY . .
+#20 ...
+
+#21 [apollo-gateway 6/7] COPY . .
+#21 DONE 0.2s
+
+#22 [promocode-subgraph 6/7] COPY . .
+#22 DONE 0.2s
+
+#20 [booking-subgraph 6/7] COPY . .
+#20 DONE 0.2s
+
+#23 [hotel-subgraph 6/7] COPY . .
+#23 DONE 0.2s
+
+#24 [hotel-subgraph 7/7] RUN npm run build --workspace hotel-subgraph
+#24 0.599 
+#24 0.599 > hotel-subgraph@1.0.0 build
+#24 0.599 > tsc --build --force && node .delivery/scripts/copy-schema.mjs
+#24 0.599 
+#24 ...
+
+#25 [apollo-gateway 7/7] RUN npm run build --workspace apollo-gateway
+#25 0.445 
+#25 0.445 > apollo-gateway@1.0.0 build
+#25 0.445 > tsc --build --force
+#25 0.445 
+#25 DONE 2.2s
+
+#26 [apollo-gateway] exporting to image
+#26 exporting layers 0.1s done
+#26 writing image sha256:75c82b6729e4c064e75d37da0fe70f5a15f5303ba196d039769d1851a923c43d done
+#26 naming to docker.io/library/task3-impl-apollo-gateway done
+#26 DONE 0.1s
+
+#27 [promocode-subgraph 7/7] RUN npm run build --workspace promocode-subgraph
+#27 0.617 
+#27 0.617 > promocode-subgraph@1.0.0 build
+#27 0.617 > tsc --build --force && node .delivery/scripts/copy-schema.mjs
+#27 0.617 
+#27 DONE 2.3s
+
+#28 [booking-subgraph 7/7] RUN npm run build --workspace booking-subgraph
+#28 0.602 
+#28 0.602 > booking-subgraph@1.0.0 build
+#28 0.602 > tsc --build --force && node .delivery/scripts/copy-schema.mjs
+#28 0.602 
+#28 DONE 2.3s
+
+#29 [apollo-gateway] resolving provenance for metadata file
+#29 DONE 0.0s
+
+#30 [promocode-subgraph] exporting to image
+#30 exporting layers 0.1s done
+#30 writing image sha256:1bc3fcadec38307da64aad728c0b416adb384e6b37db1455389efd7cd3829829 done
+#30 naming to docker.io/library/task3-impl-promocode-subgraph done
+#30 DONE 0.1s
+
+#24 [hotel-subgraph 7/7] RUN npm run build --workspace hotel-subgraph
+#24 DONE 2.4s
+
+#31 [promocode-subgraph] resolving provenance for metadata file
+#31 DONE 0.0s
+
+#32 [booking-subgraph] exporting to image
+#32 exporting layers 0.1s done
+#32 writing image sha256:1544269791dc75fc9912e6433903e4b6b115e3d4925027d8c0f3c13183afdeb3 done
+#32 naming to docker.io/library/task3-impl-booking-subgraph done
+#32 DONE 0.1s
+
+#33 [hotel-subgraph] exporting to image
+#33 exporting layers 0.1s done
+#33 writing image sha256:b2d9a5a33c44958b9f1a78e874d7cbc6590b27ac190f1c09e6d12c53d2748d4b done
+#33 naming to docker.io/library/task3-impl-hotel-subgraph done
+#33 DONE 0.1s
+
+#34 [booking-subgraph] resolving provenance for metadata file
+#34 DONE 0.0s
+
+#35 [hotel-subgraph] resolving provenance for metadata file
+#35 DONE 0.0s
+Attaching to apollo-gateway-1, booking-subgraph-1, hotel-subgraph-1, promocode-subgraph-1
+hotel-subgraph-1      | Enabling inline tracing for this subgraph. To disable, use ApolloServerPluginInlineTraceDisabled.
+hotel-subgraph-1      | ✅ Hotel subgraph ready at http://localhost:4002/
+promocode-subgraph-1  | Enabling inline tracing for this subgraph. To disable, use ApolloServerPluginInlineTraceDisabled.
+promocode-subgraph-1  | ✅ Promocode subgraph ready at http://localhost:4003/
+booking-subgraph-1    | Enabling inline tracing for this subgraph. To disable, use ApolloServerPluginInlineTraceDisabled.
+booking-subgraph-1    | ✅ Booking subgraph ready at http://localhost:4001/
+apollo-gateway-1      | 🚀 Gateway ready at http://localhost:4000/

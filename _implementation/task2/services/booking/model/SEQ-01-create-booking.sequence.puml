@@ -1,0 +1,76 @@
+@startuml Create Booking Sequence
+
+title Create Booking Sequence
+
+actor User as user
+control "Hotelio monolith\nBookingController" as monolith #lightgreen
+control GRPCBookingAdapter as grpc_booking_adapter #lightgreen
+control BookingService as booking_service #lightgreen
+control MonolithHTTPRESTAdapter as monolith_http_rest_adapter #orange
+database "booking-db\nbookings" as booking_db #lightgreen
+queue Kafka as kafka #orange
+control "booking-history-service" as booking_history_service #orange
+
+legend right
+|= Colour |= Delivery status |
+|<#lightgreen> | Implemented |
+|<#orange> | Planned |
+endlegend
+
+user -> monolith : POST /api/bookings?userId&hotelId&promoCode
+monolith -> grpc_booking_adapter : CreateBooking(user_id, hotel_id, promo_code)
+grpc_booking_adapter -> booking_service : createBooking(request)
+
+booking_service -> monolith_http_rest_adapter : isUserActive(user_id)
+monolith_http_rest_adapter -> monolith : GET /api/users/{user_id}/active
+monolith --> monolith_http_rest_adapter : active
+monolith_http_rest_adapter --> booking_service : active
+
+booking_service -> monolith_http_rest_adapter : isUserBlacklisted(user_id)
+monolith_http_rest_adapter -> monolith : GET /api/users/{user_id}/blacklisted
+monolith --> monolith_http_rest_adapter : blacklisted
+monolith_http_rest_adapter --> booking_service : blacklisted
+
+booking_service -> monolith_http_rest_adapter : isHotelOperational(hotel_id)
+monolith_http_rest_adapter -> monolith : GET /api/hotels/{hotel_id}/operational
+monolith --> monolith_http_rest_adapter : operational
+monolith_http_rest_adapter --> booking_service : operational
+
+booking_service -> monolith_http_rest_adapter : isHotelTrusted(hotel_id)
+monolith_http_rest_adapter -> monolith : GET /api/reviews/hotel/{hotel_id}/trusted
+monolith --> monolith_http_rest_adapter : trusted
+monolith_http_rest_adapter --> booking_service : trusted
+
+booking_service -> monolith_http_rest_adapter : isHotelFullyBooked(hotel_id)
+monolith_http_rest_adapter -> monolith : GET /api/hotels/{hotel_id}/fully-booked
+monolith --> monolith_http_rest_adapter : fully_booked
+monolith_http_rest_adapter --> booking_service : fully_booked
+
+alt User or hotel cannot create a booking
+    booking_service --> grpc_booking_adapter : Invalid booking error
+    grpc_booking_adapter --> monolith : gRPC error
+    monolith --> user : HTTP error
+else User and hotel can create a booking
+    booking_service -> monolith_http_rest_adapter : getUserStatus(user_id)
+    monolith_http_rest_adapter -> monolith : GET /api/users/{user_id}/status
+    monolith --> monolith_http_rest_adapter : status
+    monolith_http_rest_adapter --> booking_service : status
+
+    opt promo_code is present
+        booking_service -> monolith_http_rest_adapter : validatePromo(promo_code, user_id)
+        monolith_http_rest_adapter -> monolith : POST /api/promos/validate
+        monolith --> monolith_http_rest_adapter : PromoCode or 400
+        monolith_http_rest_adapter --> booking_service : discount or no discount
+    end
+
+    booking_service -> booking_service : Calculate price and create booking
+    booking_service -> booking_db : INSERT booking
+    booking_db --> booking_service : booking
+    booking_service -> kafka : BookingCreated
+    kafka -> booking_history_service : BookingCreated
+    booking_service --> grpc_booking_adapter : BookingResponse
+    grpc_booking_adapter --> monolith : BookingResponse
+    monolith --> user : BookingResponse
+end
+
+@enduml

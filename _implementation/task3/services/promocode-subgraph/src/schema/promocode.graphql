@@ -1,0 +1,28 @@
+extend schema
+    @link(
+        url: "https://specs.apollo.dev/federation/v2.3"
+        import: ["@external", "@inaccessible", "@key", "@override", "@requires"]
+    )
+
+extend type Booking @key(fields: "id") {
+    id: ID! @external
+    promoCode: String @external
+    originalDiscountPercent: Float @external
+    discountPercent: Float! @override(from: "booking")
+        @requires(fields: "promoCode originalDiscountPercent")
+    discountInfo: DiscountInfo @requires(fields: "promoCode originalDiscountPercent")
+}
+
+type DiscountInfo {
+    isValid: Boolean!
+    originalDiscount: Float!
+    finalDiscount: Float!
+    description: String
+    expiresAt: String
+    applicableHotels: [ID!]!
+}
+
+type Query {
+    validatePromoCode(code: String!, hotelId: ID): DiscountInfo!
+    activePromoCodes: [DiscountInfo!]!
+}

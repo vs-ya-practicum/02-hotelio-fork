@@ -1,0 +1,12 @@
+query GetBookingsByUser($userId: String!) {
+    bookingsByUser(userId: $userId) {
+        id
+        userId
+        hotelId
+        promoCode
+        discountPercent
+        hotel {
+            id
+        }
+    }
+}

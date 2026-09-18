@@ -1,0 +1,10 @@
+query HotelByReference($representations: [_Any!]!) {
+    _entities(representations: $representations) {
+        ... on Hotel {
+            id
+            name
+            city
+            stars
+        }
+    }
+}
