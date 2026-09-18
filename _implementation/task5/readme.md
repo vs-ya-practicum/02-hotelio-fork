@@ -10,6 +10,36 @@
 minikube start --driver=docker
 ```
 
+## Istio
+
+Установите Istio из каталога `./_implementation/task5`:
+
+```bash
+curl -L https://istio.io/downloadIstio | sh -
+ISTIO_DIR="$(find "$PWD" -maxdepth 1 -type d -name 'istio-*' -print -quit)"
+export PATH="$ISTIO_DIR/bin:$PATH"
+istioctl version
+```
+
+Чтобы `istioctl` был доступен в следующих сессиях Git Bash, добавьте следующую строку в `~/.bashrc`, заменив заполнитель абсолютным путём к скачанному каталогу Istio:
+
+```bash
+export PATH="/absolute/path/to/istio-<version>/bin:$PATH"
+```
+
+После сохранения файла перезагрузите конфигурацию:
+
+```bash
+source ~/.bashrc
+```
+
+Установите Istio и включите автоматическую инъекцию sidecar для namespace `default`:
+
+```bash
+istioctl install --set profile=demo -y
+kubectl label namespace default istio-injection=enabled --overwrite
+```
+
 ## Сборка и развёртывание
 
 Выполняйте команды из каталога `./_implementation/task4`.
