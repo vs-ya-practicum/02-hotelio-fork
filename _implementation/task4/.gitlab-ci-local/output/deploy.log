@@ -1,0 +1,10 @@
+[32m$ minikube image load $IMAGE_NAME:$IMAGE_TAG[39m
+[32m$ helm upgrade --install booking-service helm/booking-service --values helm/booking-service/values.staging.yaml[39m
+Release "booking-service" has been upgraded. Happy Helming!
+NAME: booking-service
+LAST DEPLOYED: Thu Sep 17 14:02:56 2026
+NAMESPACE: default
+STATUS: deployed
+REVISION: 3
+DESCRIPTION: Upgrade complete
+TEST SUITE: None

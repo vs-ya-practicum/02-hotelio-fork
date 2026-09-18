@@ -4,6 +4,7 @@ node_modules/
 coverage/
 .temp
 *.env
+istio-1.31.0/
 _implementation/task4/kubectl
 _implementation/task4/kubectl.sha256
 _implementation/task4/minikube-linux-amd64
