@@ -53,8 +53,9 @@ spec:
         retryOn: 5xx,gateway-error,connect-failure,refused-stream
       route:
         - destination:
-            host: booking-service
-            subset: v1
+            host: booking-service-fallback-caddy
+            port:
+              number: 80
           weight: 90
         - destination:
             host: booking-service
