@@ -1,0 +1,12 @@
+apiVersion: v1
+
+kind: ConfigMap
+
+metadata:
+  name: booking-service-fallback-caddy-config
+  labels:
+    app: booking-service-fallback-caddy
+
+data:
+  Caddyfile: |-
+    {{ .Files.Get "Caddyfile" | nindent 4 }}
