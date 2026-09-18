@@ -1,0 +1,23 @@
+extend schema
+    @link(
+        url: "https://specs.apollo.dev/federation/v2.3"
+        import: ["@external", "@inaccessible", "@key"]
+    )
+
+type Booking @key(fields: "id") {
+    id: ID!
+    userId: String!
+    hotelId: String!
+    promoCode: String
+    discountPercent: Float
+    originalDiscountPercent: Float @inaccessible
+    hotel: Hotel
+}
+
+extend type Hotel @key(fields: "id") {
+    id: ID! @external
+}
+
+type Query {
+    bookingsByUser(userId: String!): [Booking]
+}

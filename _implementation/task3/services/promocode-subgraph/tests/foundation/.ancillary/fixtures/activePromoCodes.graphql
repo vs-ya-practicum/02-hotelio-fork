@@ -1,0 +1,10 @@
+query ActivePromoCodes {
+    activePromoCodes {
+        isValid
+        originalDiscount
+        finalDiscount
+        description
+        expiresAt
+        applicableHotels
+    }
+}

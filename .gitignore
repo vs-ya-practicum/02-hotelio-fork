@@ -3,4 +3,6 @@ node_modules/
 .coverage/
 coverage/
 .temp
+.gitlab-ci-local
+istio-1.31.0
 *.env

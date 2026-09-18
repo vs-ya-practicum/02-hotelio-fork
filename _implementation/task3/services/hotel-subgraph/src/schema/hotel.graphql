@@ -1,0 +1,10 @@
+type Hotel @key(fields: "id") {
+    id: ID!
+    name: String
+    city: String
+    stars: Int
+}
+
+type Query {
+    hotelsByIds(ids: [ID!]!): [Hotel]!
+}
