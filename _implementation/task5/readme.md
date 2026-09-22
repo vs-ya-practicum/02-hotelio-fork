@@ -2,6 +2,15 @@
 
 This directory contains the runnable implementation of Task 5: two `booking-service` versions, Istio traffic management, and a Caddy fallback proxy.
 
+## Deployment diagram
+
+<details>
+    <summary>Hotelio Task 5 K8S Diagram</summary>
+
+![Hotelio Task 5 K8S Diagram](.svg/k8s.svg)
+
+</details>
+
 ## Prerequisites
 
 - Docker, Minikube, Helm, `kubectl`, and `istioctl` are installed.

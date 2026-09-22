@@ -1,0 +1,136 @@
+@startuml Hotelio Task 5 K8S Diagram
+!include <k8s/Common>
+!include <k8s/Simplified>
+!include <k8s/OSS/all>
+
+title Hotelio Task 5 K8S Diagram
+
+actor Client
+
+rectangle "Local access\nlocalhost:9090 → :80" as portForward
+
+Cluster_Boundary(cluster, "Minikube Kubernetes Cluster") {
+
+    Namespace_Boundary(istioSystem, "istio-system namespace") {
+        KubernetesSvc(ingressService, "istio-ingressgateway\nService :80", "")
+
+        KubernetesDeploy(ingressDeployment, "istio-ingressgateway\nDeployment", "")
+
+        KubernetesPod(ingressPod, "Ingress Gateway Pod\nEnvoy proxy", "")
+
+        rectangle "Gateway\nbooking-service-gateway\nHTTP :80; hosts: *" as gateway
+
+        rectangle "EnvoyFilter\nbooking-service-feature-flag\nworkload: istio=ingressgateway" as envoyFilter
+
+        note bottom of envoyFilter
+          When header x-feature-enabled = true:
+          set x-istio-feature-target = v2
+          and clear the route cache.
+        end note
+    }
+
+    Namespace_Boundary(application, "default namespace\nistio-injection=enabled") {
+        rectangle "VirtualService\nbooking-service" as virtualService
+
+        note bottom of virtualService
+          All routes retry 3 times:
+          per-try timeout 2 s;
+          retry on 5xx, gateway-error,
+          connect-failure, refused-stream.
+        end note
+
+        rectangle "DestinationRule\nbooking-service" as bookingDestinationRule
+
+        note bottom of bookingDestinationRule
+          Subsets:
+          v1 → version=v1
+          v2 → version=v2
+
+          Connection pool: 10 connections,
+          10 pending HTTP requests,
+          10 requests per connection.
+
+          Eject after 3 consecutive 5xx;
+          interval 5 s; ejection 30 s.
+        end note
+
+        KubernetesSvc(bookingService, "booking-service\nClusterIP Service :80 → :8080\nselector: app=booking-service", "")
+
+        KubernetesSvc(bookingV1Service, "booking-service-v1\nClusterIP Service :80 → :8080\nselector: app=booking-service, version=v1", "")
+
+        KubernetesDeploy(bookingV1Deployment, "booking-service-v1\nDeployment: 1 replica", "")
+
+        KubernetesPod(bookingV1Pod, "booking-service v1 Pod\napplication :8080\nEnvoy sidecar (injected)\nENABLE_FEATURE_X=false\nSERVICE_VERSION=v1", "")
+
+        KubernetesSvc(bookingV2Service, "booking-service-v2\nClusterIP Service :80 → :8080\nselector: app=booking-service, version=v2", "")
+
+        KubernetesDeploy(bookingV2Deployment, "booking-service-v2\nDeployment: 1 replica", "")
+
+        KubernetesPod(bookingV2Pod, "booking-service v2 Pod\napplication :8080\nEnvoy sidecar (injected)\nENABLE_FEATURE_X=true\nSERVICE_VERSION=v2", "")
+
+        KubernetesSvc(caddyService, "booking-service-fallback-caddy\nClusterIP Service :80", "")
+
+        KubernetesDeploy(caddyDeployment, "booking-service-fallback-caddy\nDeployment: 1 replica", "")
+
+        KubernetesPod(caddyPod, "Caddy Pod\nCaddy :80\nEnvoy sidecar (injected)", "")
+
+        rectangle "ConfigMap\nbooking-service-fallback-caddy-config\nCaddyfile" as caddyConfig
+
+        rectangle "DestinationRule\nbooking-service-v1\noutlier detection and\nconnection-pool policy" as v1DestinationRule
+
+        rectangle "DestinationRule\nbooking-service-v2\noutlier detection and\nconnection-pool policy" as v2DestinationRule
+
+        note bottom of bookingV1Pod
+          Liveness and readiness probes:
+          GET /ping on :8080
+        end note
+
+        note bottom of bookingV2Pod
+          Liveness and readiness probes:
+          GET /ping on :8080
+        end note
+
+        note bottom of caddyConfig
+          GET /ping only:
+          try booking-service-v1 first;
+          health check GET /healthz;
+          retry once for up to 5 s;
+          on 500/502/503/504, proxy to v2.
+        end note
+    }
+}
+
+Rel(Client, portForward, "GET /ping")
+Rel(portForward, ingressService, "HTTP :80")
+Rel(ingressService, ingressDeployment, "Routes to")
+Rel(ingressDeployment, ingressPod, "Manages")
+Rel(ingressPod, gateway, "Accepts HTTP traffic")
+Rel(envoyFilter, ingressPod, "Patches HTTP filter")
+
+Rel(gateway, virtualService, "Selects host *")
+Rel(virtualService, bookingDestinationRule, "Uses subsets")
+
+Rel(virtualService, bookingV2Service, "GET /ping + x-istio-feature-target=v2\n100% to v2")
+Rel(virtualService, caddyService, "GET /ping\n90%")
+Rel(virtualService, bookingV2Service, "GET /ping\n10%")
+Rel(virtualService, bookingService, "All other requests:\n90% v1, 10% v2")
+
+Rel(bookingDestinationRule, bookingService, "Applies traffic policy")
+Rel(bookingService, bookingV1Pod, "Subset v1")
+Rel(bookingService, bookingV2Pod, "Subset v2")
+
+Rel(bookingV1Service, bookingV1Deployment, "Routes to")
+Rel(bookingV1Deployment, bookingV1Pod, "Manages")
+Rel(bookingV2Service, bookingV2Deployment, "Routes to")
+Rel(bookingV2Deployment, bookingV2Pod, "Manages")
+
+Rel(caddyService, caddyDeployment, "Routes to")
+Rel(caddyDeployment, caddyPod, "Manages")
+Rel(caddyConfig, caddyPod, "Mounts Caddyfile")
+Rel(caddyPod, bookingV1Service, "GET /ping; primary upstream")
+Rel(caddyPod, bookingV2Service, "Fallback on v1 failure")
+
+Rel(v1DestinationRule, bookingV1Service, "Applies traffic policy")
+Rel(v2DestinationRule, bookingV2Service, "Applies traffic policy")
+
+@enduml
