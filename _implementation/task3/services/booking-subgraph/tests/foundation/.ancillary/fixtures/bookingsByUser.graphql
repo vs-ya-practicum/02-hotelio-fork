@@ -1,12 +1,23 @@
 query GetBookingsByUser($userId: String!) {
     bookingsByUser(userId: $userId) {
-        id
-        userId
-        hotelId
-        promoCode
-        discountPercent
-        hotel {
-            id
+        __typename
+        ... on BookingsByUserSuccess {
+            bookings {
+                id
+                userId
+                hotelId
+                promoCode
+                discountPercent
+                hotel {
+                    id
+                }
+            }
+        }
+        ... on UnauthenticatedError {
+            message
+        }
+        ... on ForbiddenError {
+            message
         }
     }
 }

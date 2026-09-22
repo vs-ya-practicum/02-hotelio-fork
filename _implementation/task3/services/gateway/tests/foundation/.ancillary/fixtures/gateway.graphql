@@ -1,21 +1,26 @@
 query GetBookingsWithHotels($userId: String!) {
     bookingsByUser(userId: $userId) {
-        id
-        hotelId
-        hotel {
-            id
-            name
-            city
-            stars
-        }
-        discountPercent
-        discountInfo {
-            isValid
-            originalDiscount
-            finalDiscount
-            description
-            expiresAt
-            applicableHotels
+        __typename
+        ... on BookingsByUserSuccess {
+            bookings {
+                id
+                hotelId
+                hotel {
+                    id
+                    name
+                    city
+                    stars
+                }
+                discountPercent
+                discountInfo {
+                    isValid
+                    originalDiscount
+                    finalDiscount
+                    description
+                    expiresAt
+                    applicableHotels
+                }
+            }
         }
     }
 }

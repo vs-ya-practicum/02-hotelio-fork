@@ -31,7 +31,7 @@ describe('[unit] BookingSubgraph Test', () => {
         }
     });
 
-    it('+bookingsByUser(): Should return no bookings for a different user', async () => {
+    it('+bookingsByUser(): Should return a forbidden result for a different user', async () => {
         const server = createBookingSubgraphServer();
         const actual = await server.executeOperation({
             query: bookingsByUserQuery,
@@ -41,16 +41,30 @@ describe('[unit] BookingSubgraph Test', () => {
         expect(actual.body.kind).toEqual('single');
 
         if (actual.body.kind === 'single') {
-            expect(actual.body.singleResult.data).toEqual(bookingsByUserFixture.emptyResponseData);
+            expect(actual.body.singleResult.data).toEqual(bookingsByUserFixture.forbiddenResponseData);
         }
     });
 
-    it('+bookingsByUser(): Should return no bookings without user identity', async () => {
+    it('+bookingsByUser(): Should return an unauthenticated result without user identity', async () => {
         const server = createBookingSubgraphServer();
         const actual = await server.executeOperation({
             query: bookingsByUserQuery,
             variables: bookingsByUserFixture.variables
         }, { contextValue: bookingsByUserFixture.unauthenticatedContextValue });
+
+        expect(actual.body.kind).toEqual('single');
+
+        if (actual.body.kind === 'single') {
+            expect(actual.body.singleResult.data).toEqual(bookingsByUserFixture.unauthenticatedResponseData);
+        }
+    });
+
+    it('+bookingsByUser(): Should return an empty list only for an authorized user without bookings', async () => {
+        const server = createBookingSubgraphServer();
+        const actual = await server.executeOperation({
+            query: bookingsByUserQuery,
+            variables: bookingsByUserFixture.emptyVariables
+        }, { contextValue: { req: { headers: { userid: 'user2' } } } });
 
         expect(actual.body.kind).toEqual('single');
 

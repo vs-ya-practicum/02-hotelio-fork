@@ -21,11 +21,24 @@ export const bookingResolvers = {
         bookingsByUser: (_parent: unknown, { userId }: { userId: string }, { req }) => {
             const requesterId = req.headers['userid'];
 
-            if (requesterId !== userId) {
-                return [];
+            if (!requesterId) {
+                return {
+                    __typename: 'UnauthenticatedError',
+                    message: 'Authentication is required.'
+                };
             }
 
-            return bookings.filter((booking) => booking.userId === userId);
+            if (requesterId !== userId) {
+                return {
+                    __typename: 'ForbiddenError',
+                    message: 'You cannot access another user\'s bookings.'
+                };
+            }
+
+            return {
+                __typename: 'BookingsByUserSuccess',
+                bookings: bookings.filter((booking) => booking.userId === userId)
+            };
         }
     }
 };

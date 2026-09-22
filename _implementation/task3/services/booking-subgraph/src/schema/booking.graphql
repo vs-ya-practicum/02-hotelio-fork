@@ -19,5 +19,25 @@ extend type Hotel @key(fields: "id") {
 }
 
 type Query {
-    bookingsByUser(userId: String!): [Booking]
+    """
+    Returns the bookings of the authenticated user.
+
+    Returns UnauthenticatedError when the request has no user identity and
+    ForbiddenError when the requester differs from userId.
+    """
+    bookingsByUser(userId: String!): BookingsByUserResult!
+}
+
+union BookingsByUserResult = BookingsByUserSuccess | UnauthenticatedError | ForbiddenError
+
+type BookingsByUserSuccess {
+    bookings: [Booking!]!
+}
+
+type UnauthenticatedError {
+    message: String!
+}
+
+type ForbiddenError {
+    message: String!
 }
